@@ -11,17 +11,20 @@ export const signup = async (req: Request, res: Response) => {
   try {
     const { fullname, username, password, confirmPassword } = req.body;
     if (!fullname || !username || !password || !confirmPassword) {
-      return res.status(400).json({ error: "Please fill in all fields" });
+      res.status(400).json({ error: "Please fill in all fields" });
+      return;
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ error: "Passwords don't match" });
+      res.status(400).json({ error: "Passwords don't match" });
+      return;
     }
 
     const user = await prisma.user.findUnique({ where: { username } });
 
     if (user) {
-      return res.status(400).json({ error: "User already exists" });
+      res.status(400).json({ error: "User already exists" });
+      return;
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -58,15 +61,21 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ error: "Please fill in all fields" });
+      res.status(400).json({ error: "Please fill in all fields" });
+      return;
     }
 
     const user = await prisma.user.findUnique({ where: { username } });
-    if (!user) return res.status(400).json({ error: "Invalid credentials" });
+    if (!user) {
+      res.status(400).json({ error: "Invalid credentials" });
+      return;
+    }
 
     const isPasswordCorrect = await bcryptjs.compare(password, user.password);
-    if (!isPasswordCorrect)
-      return res.status(400).json({ error: "Invalid credentials" });
+    if (!isPasswordCorrect) {
+      res.status(400).json({ error: "Invalid credentials" });
+      return;
+    }
 
     generateToken(user.id, res);
 
@@ -89,7 +98,7 @@ export const logout = async (req: Request, res: Response) => {
   try {
     res.cookie("token", "", { maxAge: 0 });
     res.status(200).json({ message: "logged out successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -101,7 +110,10 @@ export const logout = async (req: Request, res: Response) => {
 export const profile = async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: req.user.id } });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
     res.status(201).json({
       id: user.id,
@@ -109,7 +121,7 @@ export const profile = async (req: Request, res: Response) => {
       username: user.username,
       profilePicture: user.profilePicture,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }

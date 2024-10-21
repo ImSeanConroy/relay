@@ -16,11 +16,11 @@ model User {
   createdAt      DateTime @default(now())
   updateAt       DateTime @updatedAt
 
-  conversationsIds String[]
-  conversations    Conversation[]
+  conversationIds String[]
+  conversations   Conversation[]
 
-  messagesIds String[]
-  messages    Message[]
+  messageIds String[]
+  messages   Message[]
 }
 
 model Conversation {
@@ -28,11 +28,11 @@ model Conversation {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  participantsIds String[]
-  participants    User[]
+  participantIds String[]
+  participants   User[]
 
-  messagesIds String[]
-  messages    Message[]
+  messageIds String[]
+  messages   Message[]
 }
 
 model Message {

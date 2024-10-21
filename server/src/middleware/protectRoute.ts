@@ -10,8 +10,11 @@ declare global {
   namespace Express {
     export interface Request {
       user: {
-        id: string
-      }
+        id: string;
+        username?: string;
+        fullname?: string;
+        profilePicture?: string;
+      };
     }
   }
 }
@@ -24,16 +27,14 @@ const protectRoute = async (
   try {
     const token = req.cookies.token;
     if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorised - No token provided" });
+      res.status(401).json({ error: "Unauthorised - No token provided" });
+      return;
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
     if (!decoded) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorised - Invalid token provided" });
+      res.status(401).json({ error: "Unauthorised - Invalid token provided" });
+      return;
     }
 
     const user = await prisma.user.findUnique({
@@ -46,11 +47,12 @@ const protectRoute = async (
       },
     });
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      res.status(401).json({ error: "User not found" });
+      return;
     }
 
     req.user = user;
-    next()
+    next();
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });

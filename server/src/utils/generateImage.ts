@@ -23,15 +23,10 @@ let profile_imgs_name_list = [
 let profile_imgs_collections_list = [
   "notionists-neutral",
   "adventurer-neutral",
-  "fun-emoji",
 ];
 
 const generateImage = () => {
-  return `https://api.dicebear.com/6.x/${
-    profile_imgs_collections_list[
-      Math.floor(Math.random() * profile_imgs_collections_list.length)
-    ]
-  }/svg?seed=${
+  return `https://api.dicebear.com/6.xadventurer-neutral/svg?seed=${
     profile_imgs_name_list[
       Math.floor(Math.random() * profile_imgs_name_list.length)
     ]
