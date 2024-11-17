@@ -1,17 +1,34 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import HomePage from "./pages/home-page";
-import LoginPage from "./pages/login-page";
-import RegisterPage from "./pages/register-page";
+import HomePage from "./pages/home-page.tsx";
+import LoginPage from "./pages/login-page.tsx";
+import RegisterPage from "./pages/register-page.tsx";
+import { useAuthContext } from "./components/context/auth-context";
 
 function App() {
+  const { authUser, isLoading } = useAuthContext();
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="bg-white dark:bg-[#313338]">
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
-            <Route path="/" index element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/"
+            index
+            element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            path="/login"
+            element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/register"
+            element={!authUser ? <RegisterPage /> : <Navigate to={"/"} />}
+          />
         </Routes>
       </ThemeProvider>
     </div>
