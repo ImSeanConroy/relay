@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import HomePage from "./pages/home-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import RegisterPage from "./pages/register-page.tsx";
-import { useAuthContext } from "./components/context/auth-context";
+import { useAuthContext } from "./context/auth-context.tsx";
 
 function App() {
   const { authUser, isLoading } = useAuthContext();

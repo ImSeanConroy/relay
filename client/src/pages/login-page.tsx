@@ -1,3 +1,4 @@
+import { useAuthContext } from "@/context/auth-context";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -5,9 +6,11 @@ const LoginPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const { isLoading, login } = useAuthContext();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ username, password });
+    login({ username, password });
   };
 
   return (
@@ -36,7 +39,7 @@ const LoginPage = () => {
         <Link to={"/register"}>Don't have an account?</Link>
 
         <div>
-          <button>Login</button>
+          <button>{isLoading ? "Laoding..." : "Login"}</button>
         </div>
       </form>
     </div>

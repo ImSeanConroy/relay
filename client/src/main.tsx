@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContextProvider } from "./components/context/auth-context.tsx";
+import { AuthContextProvider } from "./context/auth-context.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
