@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/context/auth-context";
 
-import ChatMessages from "@/components/chat/chat-messages";
 import NavigationSidebar from "@/components/navigation/navigation-sidebar";
+import ChatContainer from "@/components/chat/chat-container";
 
 const HomePage = () => {
   const { isLoading, logout } = useAuthContext();
@@ -12,7 +12,7 @@ const HomePage = () => {
         <button onClick={logout}>{isLoading ? "Loading..." : "Logout"}</button>
       </div>
       <NavigationSidebar />
-      <ChatMessages />
+      <ChatContainer />
     </div>
   );
 };
