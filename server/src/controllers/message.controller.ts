@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 // @description   Create message
 // @route         GET /api/messages/send/:recieverId
@@ -51,10 +52,12 @@ export const sendMessage = async (req: Request, res: Response) => {
       })
     }
 
-    // Socket io will go here
+    const recieverSocketId = getReceiverSocketId(recieverId)
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("newMessage", newMessage)
+    }
 
     res.status(201).json(newMessage)
-
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });

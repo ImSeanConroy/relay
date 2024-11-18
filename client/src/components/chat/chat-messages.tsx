@@ -1,11 +1,14 @@
 import { useAuthContext } from "@/context/auth-context";
 import { useConversationContext } from "@/context/conversation-context";
+import { useSocketContext } from "@/context/socker-context";
+import useChatScroll from "@/hooks/use-chat-scroll";
 import { extractTime } from "@/utils/extract-time";
 import { useEffect, useState } from "react";
 
 const ChatMessages = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { socket } = useSocketContext();
   const { authUser } = useAuthContext();
   const { messages, setMessage, selectedConversation } =
     useConversationContext();
@@ -36,12 +39,25 @@ const ChatMessages = () => {
     getConversations();
   }, [selectedConversation, setMessage]);
 
+  useEffect(() => {
+    socket?.on("newMessage", (newMessage) => {
+      setMessage([...messages, newMessage]);
+    });
+
+    return () => {
+      socket?.off("newMessage")
+    }
+  }, [socket, messages, setMessage]);
+
+  const ref = useChatScroll(messages) as React.MutableRefObject<HTMLDivElement>
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-auto" ref={ref}>
       <p>Messages:</p>
       {!isLoading &&
         messages.map((message) => (
           <div
+            key={message.id}
             className={
               message?.senderId === authUser?.id ? "text-right" : "text-left"
             }
