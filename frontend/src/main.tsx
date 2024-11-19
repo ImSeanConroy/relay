@@ -8,7 +8,7 @@ import { ConversationContextProvider } from "./context/conversation-context.tsx"
 import { SocketContextProvider } from "./context/socker-context.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
+  <StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
         <SocketContextProvider>
@@ -18,5 +18,5 @@ createRoot(document.getElementById("root")!).render(
         </SocketContextProvider>
       </AuthContextProvider>
     </BrowserRouter>
-  // </StrictMode>
+  </StrictMode>
 );

@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import HomePage from "./pages/home-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import RegisterPage from "./pages/register-page.tsx";
@@ -14,7 +13,6 @@ function App() {
 
   return (
     <div className="bg-white dark:bg-[#313338]">
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           <Route
             path="/"
@@ -30,7 +28,6 @@ function App() {
             element={!authUser ? <RegisterPage /> : <Navigate to={"/"} />}
           />
         </Routes>
-      </ThemeProvider>
     </div>
   );
 }
