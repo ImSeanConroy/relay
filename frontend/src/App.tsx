@@ -3,13 +3,10 @@ import HomePage from "./pages/home-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import RegisterPage from "./pages/register-page.tsx";
 import { useAuthContext } from "./context/auth-context.tsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-  const { authUser, isLoading } = useAuthContext();
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  const { authUser } = useAuthContext();
 
   return (
     <div className="bg-white dark:bg-[#313338]">
@@ -28,6 +25,7 @@ function App() {
             element={!authUser ? <RegisterPage /> : <Navigate to={"/"} />}
           />
         </Routes>
+        <Toaster/>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import Alert from "@/components/alert";
 import {
   createContext,
   Dispatch,
@@ -7,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import toast from "react-hot-toast";
 
 type AuthUserType = {
   id: string;
@@ -87,6 +89,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const data = await res.json();
 
       if (!res.ok) {
+        toast.custom(() => (
+          <Alert message={data.error} type="error" />
+        ))
         throw new Error(data.error);
       }
 
@@ -111,6 +116,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const data = await res.json();
 
       if (!res.ok) {
+        toast.custom(() => (
+          <Alert message={data.error} type="error" />
+        ))
         throw new Error(data.error);
       }
 
@@ -131,6 +139,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const data = await res.json();
 
       if (!res.ok) {
+        toast.custom(() => (
+          <Alert message={data.error} type="error" />
+        ))
         throw new Error(data.error);
       }
 
