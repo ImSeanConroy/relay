@@ -5,9 +5,16 @@ type AlertType = {
   type: "info" | "success" | "warning" | "error";
 };
 
+const alertTypeMap: Record<string, string> = {
+  info: "alert-info",
+  success: "alert-success",
+  warning: "alert-warning",
+  error: "alert-error",
+};
+
 const Alert = ({ message, type }: AlertType) => {
   return (
-    <div role="alert" className={`alert alert-${type} max-w-md`}>
+    <div role="alert" className={`alert ${alertTypeMap[type]} max-w-md`}>
       {type === "info" && <Info className="h-6 w-6 shrink-0 stroke-current" />}
       {type === "success" && (
         <CircleCheck className="h-6 w-6 shrink-0 stroke-current" />

@@ -1,70 +1,38 @@
-import { useAuthContext } from "@/context/auth-context";
-import { useState } from "react";
+import { MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import RegisterForm from "@/components/authentication/register-form";
 
-const RegisterPage = () => {
-  const [fullname, setFullname] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  const { isLoading, signup } = useAuthContext();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    signup({ fullname, username, password, confirmPassword });
-  };
-
+const SignUpPage = () => {
   return (
-    <div className="flex flex-col items-center content-center">
-      <h1>Register</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label>Full Name</label>
-          <input
-            type="text"
-            value={fullname}
-            onChange={(e) => setFullname(e.target.value)}
-            className="border-zinc-500 border"
-          />
+    <div className="min-h-screen grid">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center gap-2 group">
+              <div
+                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
+              group-hover:bg-primary/20 transition-colors"
+              >
+                <MessageSquare className="size-6 text-primary" />
+              </div>
+              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
+              <p className="text-base-content/60">
+                Get started with your free account
+              </p>
+            </div>
+          </div>
+          <RegisterForm />
+          <div className="text-center">
+            <p className="text-base-content/60">
+              Already have an account?{" "}
+              <Link to="/login" className="link link-primary">
+                Log in
+              </Link>
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="border-zinc-500 border"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border-zinc-500 border"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border-zinc-500 border"
-          />
-        </div>
-
-        <Link to={"/login"}>Already have an account?</Link>
-
-        <div>
-          <button>{isLoading ? "Laoding..." : "Sign Up"}</button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
-
-export default RegisterPage;
-
+export default SignUpPage;

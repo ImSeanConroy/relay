@@ -1,50 +1,36 @@
-import { useAuthContext } from "@/context/auth-context";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { MessageSquare } from "lucide-react";
+import LoginForm from "@/components/authentication/login-form";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
-  const { isLoading, login } = useAuthContext();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login({ username, password });
-  };
-
   return (
-    <div className="flex flex-col items-center content-center">
-      <h1>Login</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="border-zinc-500 border"
-          />
+    <div className="h-screen grid">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center gap-2 group">
+              <div
+                className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20
+              transition-colors"
+              >
+                <MessageSquare className="w-6 h-6 text-primary" />
+              </div>
+              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
+              <p className="text-base-content/60">Login to your account</p>
+            </div>
+          </div>
+          <LoginForm />
+          <div className="text-center">
+            <p className="text-base-content/60">
+              Don&apos;t have an account?{" "}
+              <Link to="/register" className="link link-primary">
+                Create account
+              </Link>
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border-zinc-500 border"
-          />
-        </div>
-
-        <Link to={"/register"}>Don't have an account?</Link>
-
-        <div>
-          <button>{isLoading ? "Laoding..." : "Login"}</button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
-
 export default LoginPage;
-
