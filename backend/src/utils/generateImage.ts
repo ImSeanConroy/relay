@@ -26,7 +26,7 @@ let profile_imgs_collections_list = [
 ];
 
 const generateImage = () => {
-  return `https://api.dicebear.com/6.xadventurer-neutral/svg?seed=${
+  return `https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=${
     profile_imgs_name_list[
       Math.floor(Math.random() * profile_imgs_name_list.length)
     ]

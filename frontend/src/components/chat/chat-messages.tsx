@@ -52,8 +52,7 @@ const ChatMessages = () => {
   const ref = useChatScroll(messages) as React.MutableRefObject<HTMLDivElement>
 
   return (
-    <div className="flex flex-col gap-4 overflow-auto" ref={ref}>
-      <p>Messages:</p>
+    <div className="flex flex-col flex-1 gap-4 overflow-auto" ref={ref}>
       {!isLoading &&
         messages.map((message) => (
           <div
