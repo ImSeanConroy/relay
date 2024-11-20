@@ -1,5 +1,6 @@
 import { useConversationContext } from "@/context/conversation-context";
 import { useState } from "react";
+import { Send } from "lucide-react";
 
 const ChatInput = () => {
   const [newMessage, setNewMessage] = useState<string>("");
@@ -43,15 +44,20 @@ const ChatInput = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className="border-zinc-500 border"
-        />
-        <button>{isLoading ? "Loading..." : "Send"}</button>
+    <div className="p-4 w-full">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <div className="flex-1 flex gap-2">
+          <input
+            type="text"
+            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
+            placeholder="Type a message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
+        </div>
+        <button type="submit" className="btn" disabled={isLoading}>
+          <Send size={22} />
+        </button>
       </form>
     </div>
   );
