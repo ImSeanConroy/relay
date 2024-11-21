@@ -58,7 +58,7 @@ const ChatMessages = () => {
           <div
             key={message.id}
             className={
-              message?.senderId === authUser?.id ? "text-right" : "text-left"
+              message?.senderId === authUser?.id ? "text-right bg-primary" : "text-left"
             }
           >
             <p className="cursor-pointer">{message.body}</p>

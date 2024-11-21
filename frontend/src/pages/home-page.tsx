@@ -8,10 +8,10 @@ const HomePage = () => {
   const { selectedConversation } = useConversationContext();
 
   return (
-    <div className="h-screen bg-base-200">
-      <div className="h-full flex items-center justify-center p-4">
-        <div className="h-full bg-base-100 rounded-lg shadow-cl w-full">
-          <div className="flex h-full w-full rounded-lg overflow-hidden">
+    <div className="h-screen">
+      <div className="h-full flex items-center justify-center">
+        <div className="h-full w-full">
+          <div className="flex h-full w-full overflow-hidden">
             <NavigationSidebar />
             <ConversationSidebar />
             {!selectedConversation ? <NoChatSelected /> : <ChatContainer />}

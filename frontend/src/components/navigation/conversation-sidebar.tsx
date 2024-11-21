@@ -43,7 +43,7 @@ const ConversationSidebar = () => {
   if (isLoading) return "Loading..";
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside className="bg-base-200 h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
       <div className="border-b border-base-300 w-full p-5">
         <div className="h-full flex items-center gap-2">
           <Users className="size-6" />

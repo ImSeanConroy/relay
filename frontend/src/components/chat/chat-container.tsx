@@ -47,18 +47,18 @@ const ChatContainer = () => {
     });
 
     return () => {
-      socket?.off("newMessage")
-    }
+      socket?.off("newMessage");
+    };
   }, [socket, messages, setMessage]);
 
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col overflow-auto">
-      <ChatHeader />
-      <div className="flex-1">Loading...</div>
-      <ChatInput />
+        <ChatHeader />
+        <div className="flex-1">Loading...</div>
+        <ChatInput />
       </div>
-      )
+    );
   }
 
   return (
@@ -69,28 +69,26 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`chat ${message.senderId === authUser?.id ? "chat-end" : "chat-start"}`}
+            className={`chat ${
+              message.senderId === authUser?.id ? "chat-end" : "chat-start"
+            }`}
             // ref={messageEndRef}
           >
-            <div className=" chat-image avatar">
-              <div className="size-10 rounded-full border">
-                <img
-                  src={
-                    message.senderId === authUser?.id
-                      ? authUser.profilePicture || "/avatar.png"
-                      : selectedConversation?.profilePicture || "/avatar.png"
-                  }
-                  alt="profile pic"
-                />
+            <div>
+              <div className="mb-1">
+                <time className="text-xs opacity-50 ml-1">
+                  {extractTime(message.createdAt)}
+                </time>
               </div>
-            </div>
-            <div className="chat-header mb-1">
-              <time className="text-xs opacity-50 ml-1">
-                {extractTime(message.createdAt)}
-              </time>
-            </div>
-            <div className="chat-bubble flex flex-col">
-              {message.body && <p>{message.body}</p>}
+              <div
+                className={`rounded-xl p-3 shadow-sm ${
+                  message.senderId === authUser?.id
+                    ? "bg-primary text-primary-content"
+                    : "bg-base-200"
+                }`}
+              >
+                {message.body && <p>{message.body}</p>}
+              </div>
             </div>
           </div>
         ))}

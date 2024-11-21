@@ -44,21 +44,25 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="p-4 w-full">
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
-          <input
-            type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="Type a message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
+    <div className="border-t border-base-300 bg-base-100">
+      <div className="flex gap-2">
+        <div className="p-4 w-full">
+          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <div className="flex-1 flex gap-2">
+              <input
+                type="text"
+                className="w-full input input-bordered input-sm sm:input-md"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={isLoading}>
+              <Send size={22} />
+            </button>
+          </form>
         </div>
-        <button type="submit" className="btn" disabled={isLoading}>
-          <Send size={22} />
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
