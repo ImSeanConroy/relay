@@ -1,6 +1,7 @@
-import { useConversationContext } from "@/context/conversation-context";
-import { useState } from "react";
 import { Send } from "lucide-react";
+import { useState } from "react";
+
+import { useConversationContext } from "@/context/conversation-context";
 
 const ChatInput = () => {
   const [newMessage, setNewMessage] = useState<string>("");

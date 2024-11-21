@@ -1,6 +1,7 @@
-import { useAuthContext } from "@/context/auth-context";
-import { useState } from "react";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { useState } from "react";
+
+import { useAuthContext } from "@/context/auth-context";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);

@@ -4,12 +4,7 @@ import {
   useContext,
   useState,
 } from "react";
-
-type ConversationType = {
-  id: string;
-  fullname: string;
-  username: string;
-};
+import { ConversationType } from "@/types/types";
 
 type MessageType = {
   id: string;

@@ -1,4 +1,3 @@
-import Alert from "@/components/alert";
 import {
   createContext,
   Dispatch,
@@ -9,6 +8,8 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
+
+import Alert from "@/components/alert";
 
 type AuthUserType = {
   id: string;

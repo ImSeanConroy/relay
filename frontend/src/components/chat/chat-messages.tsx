@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
+
 import { useAuthContext } from "@/context/auth-context";
 import { useConversationContext } from "@/context/conversation-context";
-import { useSocketContext } from "@/context/socker-context";
-import useChatScroll from "@/hooks/use-chat-scroll";
+import { useSocketContext } from "@/context/socket-context";
 import { extractTime } from "@/utils/extract-time";
-import { useEffect, useState } from "react";
+import useChatScroll from "@/hooks/use-chat-scroll";
 
 const ChatMessages = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

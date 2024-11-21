@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import { MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
+
 import LoginForm from "@/components/authentication/login-form";
 
 const LoginPage = () => {

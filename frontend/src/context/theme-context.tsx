@@ -5,14 +5,14 @@ import {
   useState,
 } from "react";
 
-interface ThemeCnotextType {
+interface ThemeContextType {
   theme: string;
   setTheme: (newTheme: string) => void;
 }
 
-const ThemeContext = createContext<ThemeCnotextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const useThemeContext = (): ThemeCnotextType => {
+export const useThemeContext = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
     throw new Error(

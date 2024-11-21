@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import ChatInput from "./chat-input";
-import { useConversationContext } from "@/context/conversation-context";
-import ChatHeader from "./chat-header";
-import { useSocketContext } from "@/context/socker-context";
 import { useAuthContext } from "@/context/auth-context";
+import { useConversationContext } from "@/context/conversation-context";
+import { useSocketContext } from "@/context/socket-context";
 import { extractTime } from "@/utils/extract-time";
+import ChatInput from "@/components/chat/chat-input";
+import ChatHeader from "@/components/chat/chat-header";
 
 const ChatContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,7 +72,6 @@ const ChatContainer = () => {
             className={`chat ${
               message.senderId === authUser?.id ? "chat-end" : "chat-start"
             }`}
-            // ref={messageEndRef}
           >
             <div>
               <div className="mb-1">

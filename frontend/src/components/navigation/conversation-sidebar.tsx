@@ -1,19 +1,15 @@
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Users } from "lucide-react";
-import { useConversationContext } from "@/context/conversation-context";
-import { useSocketContext } from "@/context/socker-context";
+import toast from "react-hot-toast";
 
-type ConversationType = {
-  id: string;
-  fullname: string;
-  username: string;
-};
+import { ConversationType } from "@/types/types";
+import { useConversationContext } from "@/context/conversation-context";
+import ConversationItem from "@/components/navigation/conversation-item";
+import Alert from "@/components/alert";
 
 const ConversationSidebar = () => {
   const { selectedConversation, setSelectedConversation } =
     useConversationContext();
-
-  const { onlineUsers } = useSocketContext();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
@@ -26,6 +22,7 @@ const ConversationSidebar = () => {
         const data = await res.json();
 
         if (!res.ok) {
+          toast.custom(() => <Alert message={data.error} type="error" />);
           throw new Error(data.error);
         }
 
@@ -40,57 +37,35 @@ const ConversationSidebar = () => {
     getConversations();
   }, []);
 
-  if (isLoading) return "Loading..";
-
   return (
     <aside className="bg-base-200 h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
       <div className="border-b border-base-300 w-full p-5">
         <div className="h-full flex items-center gap-2">
-          <Users className="size-6" />
-          <span className="font-medium hidden lg:block">Contacts</span>
+          <Search className="size-6" />
+          <span className="font-medium hidden lg:block">Search</span>
         </div>
       </div>
 
-      <div className="overflow-y-auto w-full">
-        {conversations.map((conversation) => (
-          <button
-            key={conversation.id}
-            onClick={() => setSelectedConversation(conversation)}
-            className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${selectedConversation?.id === conversation.id ? "bg-base-300 ring-1 ring-base-300" : ""}
-            `}
-          >
-            <div className="relative mx-auto lg:mx-0">
-              <img
-                src={conversation.profilePicture || "/avatar.png"}
-                alt={conversation.fullname}
-                className="size-10 object-cover rounded-full"
-              />
-              {onlineUsers.includes(conversation.id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-base-100 hover:ring-base-300"
-                />
-              )}
-            </div>
+      {!isLoading && (
+        <div className="overflow-y-auto w-full">
+          {conversations.map((conversation) => (
+            <ConversationItem
+              key={conversation.id}
+              conversation={conversation}
+              selectedConversationId={selectedConversation?.id}
+              onSelectConversation={setSelectedConversation}
+            />
+          ))}
 
-            {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{conversation.fullname}</div>
-              <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(conversation.id) ? "Online" : "Offline"}
-              </div>
+          {conversations.length === 0 && (
+            <div className="text-center text-zinc-500 py-4">
+              No online users
             </div>
-          </button>
-        ))}
-
-        {conversations.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </aside>
   );
 };
+
 export default ConversationSidebar;

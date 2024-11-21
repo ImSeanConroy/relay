@@ -1,7 +1,7 @@
-import ConversationSidebar from "@/components/navigation/conversation-sidebar";
 import { useConversationContext } from "@/context/conversation-context";
-import NoChatSelected from "../components/no-chat-selected";
 import NavigationSidebar from "@/components/navigation/navigation-sidebar";
+import ConversationSidebar from "@/components/navigation/conversation-sidebar";
+import NoChatSelected from "../components/no-chat-selected";
 import ChatContainer from "@/components/chat/chat-container";
 
 const HomePage = () => {

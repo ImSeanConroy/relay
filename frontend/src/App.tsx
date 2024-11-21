@@ -1,36 +1,31 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
+import { useThemeContext } from "./context/theme-context.tsx";
+import AuthLayout from "./components/layouts/auth-layout.tsx";
+import NonAuthLayout from "./components/layouts/non-auth-layout.tsx";
 import HomePage from "./pages/home-page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import RegisterPage from "./pages/register-page.tsx";
-import { useAuthContext } from "./context/auth-context.tsx";
-import { Toaster } from "react-hot-toast";
 import SettingsPage from "./pages/settings-page.tsx";
-import { useThemeContext } from "./context/theme-context.tsx";
 
 function App() {
-  const { authUser } = useAuthContext();
-  const { theme } = useThemeContext()
+  const { theme } = useThemeContext();
 
   return (
     <div data-theme={theme}>
       <Routes>
-        <Route
-          path="/"
-          index
-          element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-        />
-        <Route
-          path="/settings"
-          element={authUser ? <SettingsPage /> : <Navigate to={"/login"} />}
-        />
-        <Route
-          path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/register"
-          element={!authUser ? <RegisterPage /> : <Navigate to={"/"} />}
-        />
+        {/* Authenticated Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/" index element={<HomePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Route>
+
+        {/* Non-Authenticated Routes */}
+        <Route element={<NonAuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
       </Routes>
       <Toaster />
     </div>

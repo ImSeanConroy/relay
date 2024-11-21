@@ -1,5 +1,6 @@
 import { MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import RegisterForm from "@/components/authentication/register-form";
 
 const SignUpPage = () => {

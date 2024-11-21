@@ -1,5 +1,5 @@
 import { useConversationContext } from "@/context/conversation-context";
-import { useSocketContext } from "@/context/socker-context";
+import { useSocketContext } from "@/context/socket-context";
 
 const ChatHeader = () => {
   const { selectedConversation } = useConversationContext();
@@ -11,13 +11,13 @@ const ChatHeader = () => {
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="size-10 ml-1 rounded-full relative">
-              <img src={selectedConversation?.profilePicture || "/avatar.png"} alt={selectedConversation?.fullname} />
+              <img src={selectedConversation!.profilePicture || "/avatar.png"} alt={selectedConversation!.fullname} />
             </div>
           </div>
           <div>
-            <h3 className="font-medium">{selectedConversation?.fullname}</h3>
+            <h3 className="font-medium">{selectedConversation!.fullname}</h3>
             <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedConversation?.id) ? "Online" : "Offline"}
+              {onlineUsers.includes(selectedConversation!.id) ? "Online" : "Offline"}
             </p>
           </div>
         </div>
@@ -25,4 +25,5 @@ const ChatHeader = () => {
     </div>
   );
 };
+
 export default ChatHeader;
