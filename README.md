@@ -13,7 +13,6 @@ Before getting started, ensure you have the following installed:
 
 The following contains instruction for getting this application running locally:
 
-
 1. **Clone the repository:**
 
 ```bash
@@ -21,28 +20,59 @@ git clone https://github.com/imseanconroy/relay.git
 cd relay
 ```
 
-2. **Install client dependencies:**
+2. **Frontend Setup:**
+
+    1. **Navigate to the frontend directory and install dependencies:**
+    ```bash
+    cd frontend
+    npm install
+    ```
+
+    2. **Configure environment variables by creating a .env file in the frontend directory**
+    ```bash
+    NODE=development
+    ```
+
+    3. **Start the frontend development server:**
+    ```bash
+    npm run dev
+    ```
+
+3. **Backend Setup:**
+
+    1. **Navigate to the backend directory and install dependencies:**
+    ```bash
+    cd backend
+    npm install
+    ```
+
+    2. **Configure environment variables by creating a .env file in the backend directory:**
+    ```bash
+    DATABASE_URL=
+    JWT_SECRET=example-secert
+    NODE_ENV=development
+    PORT=3000
+    ```
+
+    3. **Start the backend development server:**
+    ```bash
+    npm run dev
+    ```
+
+## Testing
+
+Use the following command to run all tests:
 ```bash
-cd client
-npm install
+npm run test
 ```
 
-3. **Start client:**
+## Project Structure
 
-```bash
-npm run dev
 ```
-
-4. **Install server dependencies:**
-```bash
-cd server
-npm install
-```
-
-5. **Start server:**
-
-```bash
-npm run dev
+relay/
+├── frontend/    # React application
+├── backend/     # Express.js server and PostgreSQL integration
+└── README.md    # Project documentation
 ```
 
 ## Contributing
