@@ -22,31 +22,31 @@ cd relay
 
 2. **Frontend Setup:**
 
-    1. **Navigate to the frontend directory and install dependencies:**
+    1. Navigate to the frontend directory and install dependencies:
     ```bash
     cd frontend
     npm install
     ```
 
-    2. **Configure environment variables by creating a .env file in the frontend directory**
+    2. Configure environment variables by creating a .env file in the frontend directory
     ```bash
     NODE=development
     ```
 
-    3. **Start the frontend development server:**
+    3. Start the frontend development server:
     ```bash
     npm run dev
     ```
 
 3. **Backend Setup:**
 
-    1. **Navigate to the backend directory and install dependencies:**
+    1. Navigate to the backend directory and install dependencies:
     ```bash
     cd backend
     npm install
     ```
 
-    2. **Configure environment variables by creating a .env file in the backend directory:**
+    2. Configure environment variables by creating a .env file in the backend directory:
     ```bash
     DATABASE_URL=
     JWT_SECRET=example-secert
@@ -54,7 +54,7 @@ cd relay
     PORT=3000
     ```
 
-    3. **Start the backend development server:**
+    3. Start the backend development server:
     ```bash
     npm run dev
     ```

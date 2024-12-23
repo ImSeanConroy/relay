@@ -9,8 +9,8 @@ import generateToken from "../utils/generateToken.js";
 // @access        Public
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { fullname, username, password, confirmPassword } = req.body;
-    if (!fullname || !username || !password || !confirmPassword) {
+    const { fullname, email, password, confirmPassword } = req.body;
+    if (!fullname || !email || !password || !confirmPassword) {
       res.status(400).json({ error: "Please fill in all fields" });
       return;
     }
@@ -20,7 +20,7 @@ export const signup = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (user) {
       res.status(400).json({ error: "User already exists" });
@@ -33,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
     const profilePicture = generateImage();
 
     const newUser = await prisma.user.create({
-      data: { fullname, username, password: hashedPassword, profilePicture },
+      data: { fullname, email, password: hashedPassword, profilePicture },
     });
 
     if (newUser) {
@@ -42,8 +42,10 @@ export const signup = async (req: Request, res: Response) => {
       res.status(201).json({
         id: newUser.id,
         fullname: newUser.fullname,
-        username: newUser.username,
+        email: newUser.email,
         profilePicture: newUser.profilePicture,
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updateAt,
       });
     } else {
       res.status(400).json({ error: "Invalid uset data" });
@@ -59,13 +61,13 @@ export const signup = async (req: Request, res: Response) => {
 // @access        Public
 export const login = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       res.status(400).json({ error: "Please fill in all fields" });
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       res.status(400).json({ error: "Invalid credentials" });
       return;
@@ -82,8 +84,10 @@ export const login = async (req: Request, res: Response) => {
     res.status(201).json({
       id: user.id,
       fullname: user.fullname,
-      username: user.username,
+      email: user.email,
       profilePicture: user.profilePicture,
+      createdAt: user.createdAt,
+      updatedAt: user.updateAt,
     });
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
@@ -118,8 +122,10 @@ export const profile = async (req: Request, res: Response) => {
     res.status(201).json({
       id: user.id,
       fullname: user.fullname,
-      username: user.username,
+      email: user.email,
       profilePicture: user.profilePicture,
+      createdAt: user.createdAt,
+      updatedAt: user.updateAt,
     });
   } catch (error: any) {
     console.log("Error in signup controller", error.message);

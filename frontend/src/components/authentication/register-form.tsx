@@ -6,14 +6,14 @@ import { useAuthContext } from "@/context/auth-context";
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [fullname, setFullname] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const { isLoading, signup } = useAuthContext();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    signup({ fullname, username, password, confirmPassword: password });
+    signup({ fullname, email, password, confirmPassword: password });
   };
 
   return (
@@ -38,7 +38,7 @@ const RegisterForm = () => {
 
       <div className="form-control">
         <label className="label">
-          <span className="label-text font-medium">Username</span>
+          <span className="label-text font-medium">Email</span>
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -48,8 +48,8 @@ const RegisterForm = () => {
             type="text"
             className={`input input-bordered w-full pl-10`}
             placeholder="JoeDoe01"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
       </div>

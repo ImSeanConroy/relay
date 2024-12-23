@@ -16,16 +16,18 @@ type AuthUserType = {
   fullname: string;
   email: string;
   profilePicture: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type LoginInputs = {
-  username: string;
+  email: string;
   password: string;
 };
 
 type SignupInputs = {
   fullname: string;
-  username: string;
+  email: string;
   password: string;
   confirmPassword: string;
 };

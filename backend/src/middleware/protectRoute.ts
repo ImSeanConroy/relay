@@ -11,7 +11,7 @@ declare global {
     export interface Request {
       user: {
         id: string;
-        username?: string;
+        email?: string;
         fullname?: string;
         profilePicture?: string;
       };
@@ -41,7 +41,7 @@ const protectRoute = async (
       where: { id: decoded.userId },
       select: {
         id: true,
-        username: true,
+        email: true,
         fullname: true,
         profilePicture: true,
       },

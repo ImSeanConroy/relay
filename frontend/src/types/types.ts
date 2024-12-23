@@ -1,6 +1,6 @@
 export type ConversationType = {
   id: string;
   fullname: string;
-  username: string;
+  email: string;
   profilePicture: string;
 };

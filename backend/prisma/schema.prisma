@@ -8,43 +8,36 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  username       String   @unique
-  fullname       String
-  password       String
-  profilePicture String
-  createdAt      DateTime @default(now())
-  updateAt       DateTime @updatedAt
-
+  id              String         @id @default(cuid())
+  email           String         @unique
+  fullname        String
+  password        String
+  profilePicture  String
+  createdAt       DateTime       @default(now())
+  updateAt        DateTime       @updatedAt
   conversationIds String[]
-  conversations   Conversation[]
-
-  messageIds String[]
-  messages   Message[]
+  messageIds      String[]
+  messages        Message[]
+  conversations   Conversation[] @relation("ConversationToUser")
 }
 
 model Conversation {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
-
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updateAt       DateTime  @updatedAt
   participantIds String[]
-  participants   User[]
-
-  messageIds String[]
-  messages   Message[]
+  messageIds     String[]
+  messages       Message[]
+  participants   User[]    @relation("ConversationToUser")
 }
 
 model Message {
-  id String @id @default(cuid())
-
+  id             String       @id @default(cuid())
   conversationId String
+  senderId       String
+  body           String
+  createdAt      DateTime     @default(now())
+  updateAt       DateTime     @updatedAt
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-
-  senderId String
-  sender   User   @relation(fields: [senderId], references: [id])
-
-  body      String
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
+  sender         User         @relation(fields: [senderId], references: [id])
 }

@@ -5,21 +5,21 @@ import { useAuthContext } from "@/context/auth-context";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const { isLoading, login } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login({ username, password });
+    login({ email, password });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="form-control">
         <label className="label">
-          <span className="label-text font-medium">Username</span>
+          <span className="label-text font-medium">Email</span>
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -27,10 +27,10 @@ const LoginForm = () => {
           </div>
           <input
             type="text"
-            placeholder="JoeDoe01"
+            placeholder="johndoe@example.com"
             className={`input input-bordered w-full pl-10`}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
       </div>
