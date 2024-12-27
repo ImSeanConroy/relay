@@ -44,8 +44,9 @@ export const signup = async (req: Request, res: Response) => {
         fullname: newUser.fullname,
         email: newUser.email,
         profilePicture: newUser.profilePicture,
+        status: newUser.status,
         createdAt: newUser.createdAt,
-        updatedAt: newUser.updateAt,
+        updatedAt: newUser.updatedAt,
       });
     } else {
       res.status(400).json({ error: "Invalid uset data" });
@@ -86,8 +87,9 @@ export const login = async (req: Request, res: Response) => {
       fullname: user.fullname,
       email: user.email,
       profilePicture: user.profilePicture,
+      status: user.status,
       createdAt: user.createdAt,
-      updatedAt: user.updateAt,
+      updatedAt: user.updatedAt,
     });
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
@@ -108,7 +110,7 @@ export const logout = async (req: Request, res: Response) => {
   }
 };
 
-// @description   Logout user
+// @description   Get user profile
 // @route         GET /api/auth/profile
 // @access        Public
 export const profile = async (req: Request, res: Response) => {
@@ -124,11 +126,54 @@ export const profile = async (req: Request, res: Response) => {
       fullname: user.fullname,
       email: user.email,
       profilePicture: user.profilePicture,
+      status: user.status,
       createdAt: user.createdAt,
-      updatedAt: user.updateAt,
+      updatedAt: user.updatedAt,
     });
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// @description   Update user profile
+// @route         PUT /api/auth/profile
+// @access        Private
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const { fullname, email, profilePicture, status } = req.body;
+    const userId = req.user.id;
+
+    if (!fullname && !email && !profilePicture && !status) {
+      return res.status(400).json({ error: "No data provided to update" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        fullname: fullname || user.fullname,
+        email: email || user.email,
+        profilePicture: profilePicture || user.profilePicture,
+        status: status || user.status
+      },
+    });
+
+    res.status(200).json({
+      id: updatedUser.id,
+      fullname: updatedUser.fullname,
+      email: updatedUser.email,
+      profilePicture: updatedUser.profilePicture,
+      status: updatedUser.status,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+    });
+  } catch (error: any) {
+    console.log("Error in updateProfile controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

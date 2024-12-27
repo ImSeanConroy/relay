@@ -15,7 +15,6 @@ const ChatPreview = () => {
       <h3 className="text-lg font-semibold mb-3">Preview</h3>
       <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
         <div className="p-4 bg-base-200">
-          <div className="max-w-lg mx-auto">
             <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-base-300 bg-base-100">
                 <div className="flex items-center gap-3">
@@ -24,7 +23,7 @@ const ChatPreview = () => {
                   </div>
                   <div>
                     <h3 className="font-medium text-sm">John Doe</h3>
-                    <p className="text-xs text-base-content/70">Online</p>
+                    <p className="text-xs text-base-content/70">Online — Working for Home</p>
                   </div>
                 </div>
               </div>
@@ -69,12 +68,12 @@ const ChatPreview = () => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    className="input input-bordered flex-1 text-sm h-10"
+                    className="input input-bordered flex-1 text-sm h-10 rounded-lg"
                     placeholder="Type a message..."
                     value="This is a preview"
                     readOnly
                   />
-                  <button className="btn btn-primary h-10 min-h-0">
+                  <button className="btn btn-primary h-10 min-h-0 rounded-lg">
                     <Send size={18} />
                   </button>
                 </div>
@@ -82,7 +81,6 @@ const ChatPreview = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };

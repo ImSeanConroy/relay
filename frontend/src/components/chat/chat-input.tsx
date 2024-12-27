@@ -52,13 +52,13 @@ const ChatInput = () => {
             <div className="flex-1 flex gap-2">
               <input
                 type="text"
-                className="w-full input input-bordered input-sm sm:input-md"
+                className="w-full input input-bordered input-sm sm:input-md rounded-lg"
                 placeholder="Type a message..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            <button type="submit" className="btn btn-primary rounded-lg" disabled={isLoading}>
               <Send size={22} />
             </button>
           </form>

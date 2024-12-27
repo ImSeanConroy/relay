@@ -28,7 +28,7 @@ const LoginForm = () => {
           <input
             type="text"
             placeholder="johndoe@example.com"
-            className={`input input-bordered w-full pl-10`}
+            className={`input input-bordered w-full pl-10 rounded-lg`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -45,7 +45,7 @@ const LoginForm = () => {
           </div>
           <input
             type={showPassword ? "text" : "password"}
-            className={`input input-bordered w-full pl-10`}
+            className={`input input-bordered w-full pl-10 rounded-lg`}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -66,7 +66,7 @@ const LoginForm = () => {
 
       <button
         type="submit"
-        className="btn btn-primary w-full"
+        className="btn btn-primary w-full rounded-lg"
         disabled={isLoading}
       >
         {isLoading && <Loader2 className="h-5 w-5 animate-spin" />} Log in

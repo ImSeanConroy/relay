@@ -16,7 +16,9 @@ function AuthLayout() {
         <div className="h-full w-full">
           <div className="flex h-full w-full overflow-hidden">
             <NavigationSidebar />
+            <div className="flex h-full w-full overflow-scroll">
             <Outlet />
+            </div>
           </div>
         </div>
       </div>

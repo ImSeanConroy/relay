@@ -28,7 +28,7 @@ const RegisterForm = () => {
           </div>
           <input
             type="text"
-            className={`input input-bordered w-full pl-10`}
+            className={`input input-bordered w-full pl-10 rounded-lg`}
             placeholder="John Doe"
             value={fullname}
             onChange={(e) => setFullname(e.target.value)}
@@ -46,7 +46,7 @@ const RegisterForm = () => {
           </div>
           <input
             type="text"
-            className={`input input-bordered w-full pl-10`}
+            className={`input input-bordered w-full pl-10 rounded-lg`}
             placeholder="JoeDoe01"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -64,14 +64,14 @@ const RegisterForm = () => {
           </div>
           <input
             type={showPassword ? "text" : "password"}
-            className={`input input-bordered w-full pl-10`}
+            className={`input input-bordered w-full pl-10 rounded-lg`}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center rounded-lg"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
@@ -85,7 +85,7 @@ const RegisterForm = () => {
 
       <button
         type="submit"
-        className="btn btn-primary w-full"
+        className="btn btn-primary w-full rounded-lg"
         disabled={isLoading}
       >
         {isLoading && <Loader2 className="h-5 w-5 animate-spin" />} Create Account

@@ -114,7 +114,8 @@ export const getConversations = async (req: Request, res: Response) => {
       select: {
         id: true,
         fullname: true,
-        profilePicture: true
+        profilePicture: true,
+        status: true
       }
     })
 

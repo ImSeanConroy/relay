@@ -16,6 +16,7 @@ type AuthUserType = {
   fullname: string;
   email: string;
   profilePicture: string;
+  status: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -32,6 +33,12 @@ type SignupInputs = {
   confirmPassword: string;
 };
 
+type ProfileInputs = {
+  email?: string;
+  fullname?: string;
+  status?: string
+}
+
 type AuthContextType = {
   authUser: AuthUserType | null;
   setAuthUser: Dispatch<SetStateAction<AuthUserType | null>>;
@@ -39,6 +46,7 @@ type AuthContextType = {
   login: (inputs: LoginInputs) => Promise<void>;
   logout: () => Promise<void>;
   signup: (inputs: SignupInputs) => Promise<void>;
+  updateProfile: (inputs: ProfileInputs) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -48,6 +56,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: async () => {},
   signup: async () => {},
+  updateProfile: async () => {},
 });
 
 export const useAuthContext = () => {
@@ -156,9 +165,41 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateProfile = async (inputs: ProfileInputs) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
+
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.custom(() => (
+          <Alert message={data.error} type="error" />
+        ))
+        throw new Error(data.error);
+      } else {
+        toast.custom(() => (
+          <Alert message="Update Successful!" type="success" />
+        ))
+      }
+
+      setAuthUser(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ authUser, setAuthUser, isLoading, login, logout, signup }}
+      value={{ authUser, setAuthUser, isLoading, login, logout, signup, updateProfile }}
     >
       {children}
     </AuthContext.Provider>
