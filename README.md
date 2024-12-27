@@ -2,6 +2,18 @@
 
 Full-stack messaging application built using the PERN stack (PostgreSQL, Express, React, and Node).
 
+![Project Colors Demo](.github/test.gif)
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Development and Testing](#development-and-testing)
+- [Development Plan and Improvements](#development-plan-and-improvements)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+
 ## Getting Started
 
 ### Prerequisites
@@ -11,7 +23,7 @@ Before getting started, ensure you have the following installed:
 
 ### Installation
 
-The following contains instruction for getting this application running locally:
+Follow these steps to set up the application locally:
 
 1. **Clone the repository:**
 
@@ -28,9 +40,9 @@ cd relay
     npm install
     ```
 
-    2. Configure environment variables by creating a .env file in the frontend directory
-    ```bash
-    NODE=development
+    2. Configure environment variables by creating a `.env` file in the `frontend` directory:
+    ```env
+    NODE_ENV=development
     ```
 
     3. Start the frontend development server:
@@ -46,10 +58,10 @@ cd relay
     npm install
     ```
 
-    2. Configure environment variables by creating a .env file in the backend directory:
-    ```bash
-    DATABASE_URL=
-    JWT_SECRET=example-secert
+    2. Configure environment variables by creating a `.env` file in the `backend` directory:
+    ```env
+    DATABASE_URL=<your_database_url>
+    JWT_SECRET=<your_jwt_secret>
     NODE_ENV=development
     PORT=3000
     ```
@@ -59,12 +71,37 @@ cd relay
     npm run dev
     ```
 
-## Testing
+## Development and Testing
 
-Use the following command to run all tests:
+Run all tests with the following command:
 ```bash
 npm run test
 ```
+
+## Development Plan and Improvements
+
+This section outlines upcoming features and improvements:
+
+1. **User Features:**
+   - **Integrate email validation and forgotten password functionality.**
+   - Add functionality to update and delete messages.
+   - Enable replying to messages and creating message threads.
+   - Improve search functionality with optimized API calls and enhanced UI.
+   - Implement avatars customization and image uploads.
+
+2. **UI/UX Enhancements:**
+   - Redesign the chat interface for better usability, particularly on mobile devices.
+   - Integrate animations and transitions to enhance user interaction.
+
+3. **Testing and Quality Assurance:**
+   - **Expand test coverage for both frontend and backend components.**
+   - Automate integration tests using CI/CD pipelines for streamlined deployment.
+   - Introduce comprehensive logging for error tracking and debugging.
+
+4. **Documentation:**
+   - Create a detailed API reference.
+
+Feel free to suggest additional improvements by [opening an issue](https://github.com/ImSeanConroy/relay/issues/new/choose).
 
 ## Project Structure
 
