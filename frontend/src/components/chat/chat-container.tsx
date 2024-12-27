@@ -6,6 +6,8 @@ import { useSocketContext } from "@/context/socket-context";
 import { extractTime } from "@/utils/extract-time";
 import ChatInput from "@/components/chat/chat-input";
 import ChatHeader from "@/components/chat/chat-header";
+import ChatNoMessages from "@/components/chat/chat-no-messages";
+import ChatLoading from "@/components/chat/chat-loading";
 
 const ChatContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,7 +57,17 @@ const ChatContainer = () => {
     return (
       <div className="flex-1 flex flex-col overflow-auto">
         <ChatHeader />
-        <div className="flex-1">Loading...</div>
+        <ChatLoading />
+        <ChatInput />
+      </div>
+    );
+  }
+
+  if (messages.length == 0) {
+    return (
+      <div className="flex-1 flex flex-col overflow-auto">
+        <ChatHeader />
+        <ChatNoMessages />
         <ChatInput />
       </div>
     );

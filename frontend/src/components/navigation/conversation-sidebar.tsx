@@ -13,6 +13,7 @@ const ConversationSidebar = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const getConversations = async () => {
@@ -37,18 +38,28 @@ const ConversationSidebar = () => {
     getConversations();
   }, []);
 
+  const filteredConversations = conversations.filter((conversation) =>
+    conversation.fullname?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <aside className="bg-base-200 h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-      <div className="border-b border-base-300 w-full p-5">
+      <div className="border-b border-base-300 w-full p-5 hover:bg-base-300/50">
         <div className="h-full flex items-center gap-2">
           <Search className="size-6" />
-          <span className="font-medium hidden lg:block">Search</span>
+          <input
+            type="text"
+            placeholder="Search"
+            className="bg-transparent border-none outline-none flex-grow pl-2 placeholder-base-content"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
       </div>
 
-      {!isLoading && (
+      {!isLoading ? (
         <div className="overflow-y-auto w-full">
-          {conversations.map((conversation) => (
+          {filteredConversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
               conversation={conversation}
@@ -57,11 +68,17 @@ const ConversationSidebar = () => {
             />
           ))}
 
-          {conversations.length === 0 && (
-            <div className="text-center text-zinc-500 py-4">
-              No online users
+          {filteredConversations.length === 0 && (
+            <div className="text-center text-zinc-500 py-8">
+              No conversations found
             </div>
           )}
+        </div>
+      ) : (
+        <div className="overflow-y-auto w-full">
+          <div className="text-center text-zinc-500 py-8">
+            Loading conversations
+          </div>
         </div>
       )}
     </aside>
