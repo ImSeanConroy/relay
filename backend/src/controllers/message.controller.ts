@@ -1,65 +1,74 @@
 import { Request, Response } from "express";
-import prisma from "../db/prisma.js";
 import { getIO } from "../socket/socket-context.js";
 import { getReceiverSocketId } from "../socket/socket.js";
+import messageService from "../services/message.service.js";
+import conversationService from "../services/conversation.service.js";
 
 // @description   Create message
-// @route         GET /api/messages/send/:recieverId
+// @route         POST /api/messages/:conversationId
 // @access        Private
 export const sendMessage = async (req: Request, res: Response) => {
   try {
-    const { message } = req.body;
-    const { id:recieverId } = req.params;
-    const senderId = req.user.id
+    const userId = req.user.id;
+    const { conversationId } = req.params;
+    const { body } = req.body;
 
-    let conversation = await prisma.conversation.findFirst({
-      where: {
-        participantIds: {
-          hasEvery: [senderId, recieverId]
-        }
+    const newMessage = await messageService.create(
+      conversationId,
+      userId,
+      body
+    );
+
+    const io = getIO()
+    const conversationParticipants = await conversationService.findUsers(conversationId)
+    conversationParticipants.map((user: any) => {
+      const socketId = getReceiverSocketId(user.id)
+      if (socketId) {
+        io.to(socketId).emit("newMessage", newMessage)
       }
     })
 
-    if (!conversation) {
-      conversation = await prisma.conversation.create({
-        data: {
-          participantIds: {
-            set: [senderId, recieverId]
-          }
-        }
-      })
-    }
+    res.status(201).json(newMessage);
+  } catch (error: any) {
+    console.log("Error in signup controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
-    const newMessage = await prisma.message.create({
-      data: {
-        senderId,
-        body: message,
-        conversationId: conversation.id
-      }
-    })
+// @description   Update message
+// @route         PUT /api/messages/:messageId
+// @access        Private
+export const updateMessage = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const { messageId } = req.params;
+    const { body } = req.body;
 
-    if (newMessage) {
-      conversation = await prisma.conversation.update({
-        where: {
-          id: conversation.id
-        },
-        data: {
-          messages: {
-            connect: {
-              id: newMessage.id
-            }
-          }
-        }
-      })
-    }
+    const newMessage = await messageService.udpate(
+      messageId,
+      body
+    );
 
-    const recieverSocketId = getReceiverSocketId(recieverId)
-    if (recieverSocketId) {
-      const io = getIO();
-      io.to(recieverSocketId).emit("newMessage", newMessage)
-    }
+    res.status(201).json(newMessage);
+  } catch (error: any) {
+    console.log("Error in signup controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
-    res.status(201).json(newMessage)
+// @description   Delete message
+// @route         DELETE /api/messages/:messageId
+// @access        Private
+export const deleteMessage = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const { messageId } = req.params;
+
+    const newMessage = await messageService.softDelete(
+      messageId,
+    );
+
+    res.status(201).json(newMessage);
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -67,63 +76,23 @@ export const sendMessage = async (req: Request, res: Response) => {
 };
 
 // @description   Get messages
-// @route         GET /api/messages/:userId
+// @route         GET /api/messages/:conversationId
 // @access        Private
 export const getMessages = async (req: Request, res: Response) => {
   try {
-    const { id: userId } = req.params
-    const senderId = req.user.id
+    const userId = req.user.id;
+    const { conversationId } = req.params;
 
-    let conversation = await prisma.conversation.findFirst({
-      where: {
-        participantIds: {
-          hasEvery: [senderId, userId]
-        }
-      },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: "asc"
-          }
-        }
-      }
-    })
+    const messages = await messageService.findByConversationId(conversationId);
 
-    if (!conversation) {
-      res.status(200).json([])
-      return 
+    if (!messages) {
+      res.status(200).json([]);
+      return;
     }
 
-    res.status(200).json(conversation.messages)
+    res.status(200).json(messages);
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
-
-// @description   Get conversations
-// @route         GET /api/messages/conversations
-// @access        Private
-export const getConversations = async (req: Request, res: Response) => {
-  try {
-    const userId = req.user.id
-    const users = await prisma.user.findMany({
-      where: {
-        id: {
-          not: userId
-        }
-      },
-      select: {
-        id: true,
-        fullname: true,
-        profilePicture: true,
-        status: true
-      }
-    })
-
-    res.status(200).json(users)
-  } catch (error: any) {
-    console.log("Error in signup controller", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-}
+};

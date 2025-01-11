@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import conversationService from "../services/conversation.service.js";
 
-// @description   Create conversation between users (DM or Group)
-// @route         POST /api/conversation
+// @description   Create conversation
+// @route         POST /api/conversations
 // @access        Private
 export const createConversation = async (req: Request, res: Response) => {
   const { conversationType, name, userIds } = req.body;
@@ -22,9 +22,9 @@ export const createConversation = async (req: Request, res: Response) => {
   }
 };
 
-// // @description   Retrieve all conversations for a user
-// // @route         GET /api/conversation
-// // @access        Private
+// @description   Retrieve all conversations for a user
+// @route         GET /api/conversations
+// @access        Private
 export const getUserConversations = async (req: Request, res: Response) => {
   const userId = req.user.id;
   try {
@@ -35,9 +35,9 @@ export const getUserConversations = async (req: Request, res: Response) => {
   }
 };
 
-// // @description   Add a user to an existing group conversation
-// // @route         POST /api/conversation/users
-// // @access        Private
+// @description   Add a user to an existing group conversation
+// @route         POST /api/conversation/users
+// @access        Private
 export const addUserToConversation = async (req: Request, res: Response) => {
   const { conversationId, userId } = req.body;
 
@@ -49,9 +49,9 @@ export const addUserToConversation = async (req: Request, res: Response) => {
   }
 };
 
-// // @description   Remove a user from a group conversation
-// // @route         DELETE /api/conversation/users
-// // @access        Private
+// @description   Remove a user from a group conversation
+// @route         DELETE /api/conversation/users
+// @access        Private
 export const removeUserFromConversation = async (req: Request, res: Response) => {
   const { conversationId, userId } = req.body;
 
