@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
-import prisma from "../db/prisma.js";
 import generateImage from "../utils/generateImage.js";
 import generateToken from "../utils/generateToken.js";
+import userService from "../services/user-service.js";
 
 // @description   Signup user
 // @route         POST /api/auth/signup
@@ -20,8 +20,7 @@ export const signup = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-
+    const user = await userService.findByEmail(email);
     if (user) {
       res.status(400).json({ error: "User already exists" });
       return;
@@ -32,10 +31,12 @@ export const signup = async (req: Request, res: Response) => {
 
     const profilePicture = generateImage();
 
-    const newUser = await prisma.user.create({
-      data: { fullname, email, password: hashedPassword, profilePicture },
-    });
-
+    const newUser = await userService.create(
+      fullname,
+      email,
+      hashedPassword,
+      profilePicture
+    );
     if (newUser) {
       generateToken(newUser.id, res);
 
@@ -49,7 +50,7 @@ export const signup = async (req: Request, res: Response) => {
         updatedAt: newUser.updatedAt,
       });
     } else {
-      res.status(400).json({ error: "Invalid uset data" });
+      res.status(400).json({ error: "Invalid user data" });
     }
   } catch (error: any) {
     console.log("Error in signup controller", error.message);
@@ -68,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await userService.findByEmail(email);
     if (!user) {
       res.status(400).json({ error: "Invalid credentials" });
       return;
@@ -115,7 +116,7 @@ export const logout = async (req: Request, res: Response) => {
 // @access        Public
 export const profile = async (req: Request, res: Response) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    const user = await userService.findById(req.user.id);
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -148,20 +149,18 @@ export const updateProfile = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "No data provided to update" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await userService.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        fullname: fullname || user.fullname,
-        email: email || user.email,
-        profilePicture: profilePicture || user.profilePicture,
-        status: status || user.status
-      },
-    });
+    const updatedUser = await userService.update(
+      userId,
+      fullname || user.fullname,
+      email || user.email,
+      profilePicture || user.profilePicture,
+      status || user.status
+    );
 
     res.status(200).json({
       id: updatedUser.id,

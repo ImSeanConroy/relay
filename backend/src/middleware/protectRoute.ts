@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import prisma from "../db/prisma.js";
+import userService from "../services/user-service.js";
 
 interface DecodedToken extends JwtPayload {
   userId: string;
@@ -37,15 +37,7 @@ const protectRoute = async (
       return;
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        email: true,
-        fullname: true,
-        profilePicture: true,
-      },
-    });
+    const user = await userService.findById(decoded.userId)
     if (!user) {
       res.status(401).json({ error: "User not found" });
       return;

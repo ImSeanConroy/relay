@@ -1,10 +1,24 @@
 services:
   postgres:
-    container_name: postgres
+    container_name: replay-postgres
     image: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=testpass123
-      - POSTGRES_DB=mydb
+    hostname: localhost
     ports:
-      - 6500:5432
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=relay
+    restart: unless-stopped
+  
+  pgadmin:
+    container_name: replay-pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    restart: unless-stopped
