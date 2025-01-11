@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
+import { getIO } from "../socket/socket-context.js";
+import { getReceiverSocketId } from "../socket/socket.js";
 
 // @description   Create message
 // @route         GET /api/messages/send/:recieverId
@@ -54,6 +55,7 @@ export const sendMessage = async (req: Request, res: Response) => {
 
     const recieverSocketId = getReceiverSocketId(recieverId)
     if (recieverSocketId) {
+      const io = getIO();
       io.to(recieverSocketId).emit("newMessage", newMessage)
     }
 

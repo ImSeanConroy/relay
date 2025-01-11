@@ -9,7 +9,6 @@ const SettingsPage = () => {
     <div className="h-screen container mx-auto px-4 my-12 max-w-5xl">
       <div className="space-y-6">
         <Status />
-        <Theme />
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1">
             <ChatPreview />
@@ -18,6 +17,7 @@ const SettingsPage = () => {
             <Profile />
           </div>
         </div>
+        <Theme />
       </div>
     </div>
   );
