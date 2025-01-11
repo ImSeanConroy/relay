@@ -6,17 +6,13 @@ Full-stack messaging application built using the PERN stack (PostgreSQL, Express
 
 ## Table of Contents
 
-- [Relay: Send. Receive. Connect.](#relay-send-receive-connect)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Development and Testing](#development-and-testing)
-  - [Development Plan and Improvements](#development-plan-and-improvements)
-  - [Project Structure](#project-structure)
-  - [Contributing](#contributing)
-  - [License](#license)
-  - [Support](#support)
+- [Getting Started](#getting-started)
+- [Development and Testing](#development-and-testing)
+- [Development Plan and Improvements](#development-plan-and-improvements)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
 
 ## Getting Started
 
@@ -29,56 +25,82 @@ Before getting started, ensure you have the following installed:
 
 Follow these steps to set up the application locally:
 
-1. **Clone the repository:**
+1. **Clone the repository**:
 
 ```bash
 git clone https://github.com/imseanconroy/relay.git
 cd relay
 ```
 
-2. **Frontend Setup:**
+2. **Frontend Setup**:
 
-    1. Navigate to the frontend directory and install dependencies:
-    ```bash
-    cd frontend
-    npm install
-    ```
-
-    2. Configure environment variables by creating a `.env` file in the `frontend` directory:
-    ```env
-    NODE_ENV=development
-    ```
-
-    3. Start the frontend development server:
-    ```bash
-    npm run dev
-    ```
-
-3. **Backend Setup:**
-
-    1. Navigate to the backend directory and install dependencies:
-    ```bash
-    cd backend
-    npm install
-    ```
-
-    2. Configure environment variables by creating a `.env` file in the `backend` directory:
-    ```env
-    DATABASE_URL=<your_database_url>
-    JWT_SECRET=<your_jwt_secret>
-    NODE_ENV=development
-    PORT=3000
-    ```
-
-    3. Run PG-migrate to set databse tables:
-   ```
-   npm run migrate:up
+   1. **Install Dependencies**: Navigate to the `frontend` directory and install required dependencies:
+   ```bash
+      cd frontend
+      npm install
    ```
 
-    4. Start the backend development server:
-    ```bash
-    npm run dev
+   2. **Configure Environment Variables**: Create a `.env` file in the frontend directory with the following content:
+   ```env
+      NODE_ENV=development
+   ```
+
+   3. **Start Frontend Development Server**: Run the following command to start the frontend development server:
+   ```bash
+      npm run dev
+   ```
+
+3. **Database Setup**:
+
+   1. **Install Backend Dependencies**: Navigate to the `backend` directory and install the required dependencies:
+   ```bash
+      cd backend
+      npm install
+   ```
+
+   2. **Configure Environment Variables**: Create a `.env` file in the `backend` directory with the following content:
+   ```env
+      PGADMIN_DEFAULT_EMAIL=<pg_admin_email>
+      PGADMIN_DEFAULT_PASSWORD=<pg_admin_password>
+
+      POSTGRES_PASSWORD=<database_password>
+      POSTGRES_USER=<database_user>
+      POSTGRES_DB=<database_name>
+      POSTGRES_PORT=5432
+      POSTGRES_HOST=localhost
+   ```
+
+   3. **Start Docker Container**: Run the following command to start the Docker container:
+    ```env
+    docker compose up -d
     ```
+   
+   4. **Access PGAdmin**: Open your browser and go to `localhost:5050` to log in to PGAdmin using the credentials defined in the .env file. Once logged in, connect to PostgreSQL and create a database matching the name defined in `{POSTGRES_DB}`.
+   
+   5. **Run Database Migrations**: Use PG-migrate to set up the database tables by running:
+   ```
+   DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} npm run migrate:up
+   ```
+
+4. **Backend Setup:**
+
+   1. **Install Backend Dependencies**: Navigate to the `backend` directory and install the required dependencies:
+   ```bash
+      cd backend
+      npm install
+   ```
+
+   2. **Configure Environment Variables**: Open the `.env` file in the `backend` directory and ensure the database environment variables are not deleted. Add the following variables:
+   ```env
+      NODE_ENV=development
+      JWT_SECRET=<your_jwt_secret>
+      PORT=3000
+   ```
+
+   3. **Start Backend Development Server**: Run the following command to start the backend development server:
+   ```bash
+      npm run dev
+   ```
 
 ## Development and Testing
 
@@ -116,9 +138,19 @@ Feel free to suggest additional improvements by [opening an issue](https://githu
 
 ```
 relay/
-├── frontend/    # React application
-├── backend/     # Express.js server and PostgreSQL integration
-└── README.md    # Project documentation
+├── frontend/                  # React application for the user interface
+├── backend/                   # Express.js server with PostgreSQL integration
+|   ├── migrations/            # Database migration files
+|   ├── src/                   # Backend source code
+|       ├── config/            # Database and environment configurations
+│       ├── controllers/       # API request handlers
+│       ├── middleware/        # Request processing logic (e.g., auth, logging)
+│       ├── repositories/      # Database queries and schema models
+│       ├── routes/            # API endpoint definitions
+│       ├── services/          # Core business logic
+│       ├── socket/            # Real-time WebSocket handling
+│       ├── util/              # Utility functions (e.g., validation, logging)
+└── README.md                  # Project documentation
 ```
 
 ## Contributing

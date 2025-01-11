@@ -1,5 +1,5 @@
 import { query } from "../config/db.js";
-import { toCamelCase } from "./utils/to-camel-case.js";
+import { toCamelCase } from "./utils/toCamelCase.js";
 
 const getUsers = async () => {
   const { rows } = await query("SELECT * FROM users;");

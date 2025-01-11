@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 import generateImage from "../utils/generateImage.js";
 import generateToken from "../utils/generateToken.js";
-import userService from "../services/user-service.js";
+import userService from "../services/user.service.js";
 
 // @description   Signup user
 // @route         POST /api/auth/signup
