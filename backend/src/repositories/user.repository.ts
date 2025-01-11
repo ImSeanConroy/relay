@@ -12,7 +12,9 @@ const getUserById = async (id: string) => {
 };
 
 const getUserByEmail = async (email: string) => {
-  const { rows } = await query("SELECT * FROM users WHERE email = $1;", [email]);
+  const { rows } = await query("SELECT * FROM users WHERE email = $1;", [
+    email,
+  ]);
   return toCamelCase(rows)[0];
 };
 
@@ -43,10 +45,15 @@ const updateUser = async (
   return toCamelCase(rows)[0];
 };
 
+const deleteUser = async (id: string) => {
+  return await query("DELETE FROM users WHERE id = $1", [id]);
+};
+
 export default {
   getUsers,
   getUserById,
   getUserByEmail,
   createUser,
   updateUser,
+  deleteUser,
 };

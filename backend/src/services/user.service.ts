@@ -67,4 +67,13 @@ const update = async (
   }
 };
 
-export default { getAll, findById, findByEmail, create, update };
+const hardDelete = async (id: string) => {
+  try {
+    const user = await User.deleteUser(id);
+    return user;
+  } catch (error) {
+    throw new Error("Error deleting user");
+  }
+};
+
+export default { getAll, findById, findByEmail, create, update, hardDelete };

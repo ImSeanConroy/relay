@@ -146,12 +146,14 @@ export const updateProfile = async (req: Request, res: Response) => {
     const userId = req.user.id;
 
     if (!fullname && !email && !profilePicture && !status) {
-      return res.status(400).json({ error: "No data provided to update" });
+      res.status(400).json({ error: "No data provided to update" });
+      return;
     }
 
     const user = await userService.findById(req.user.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ error: "User not found" });
+      return;
     }
 
     const updatedUser = await userService.update(
@@ -173,6 +175,28 @@ export const updateProfile = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.log("Error in updateProfile controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// @description   Delete user profile
+// @route         DELETE /api/auth/profile
+// @access        Private
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const user = await userService.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    await userService.hardDelete(userId);
+
+    res.cookie("token", "", { maxAge: 0 });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error: any) {
+    console.log("Error in deleteUser controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
