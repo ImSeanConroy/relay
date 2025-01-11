@@ -6,13 +6,17 @@ Full-stack messaging application built using the PERN stack (PostgreSQL, Express
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [Development and Testing](#development-and-testing)
-- [Development Plan and Improvements](#development-plan-and-improvements)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Support](#support)
+- [Relay: Send. Receive. Connect.](#relay-send-receive-connect)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Development and Testing](#development-and-testing)
+  - [Development Plan and Improvements](#development-plan-and-improvements)
+  - [Project Structure](#project-structure)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Support](#support)
 
 ## Getting Started
 
@@ -66,7 +70,12 @@ cd relay
     PORT=3000
     ```
 
-    3. Start the backend development server:
+    3. Run PG-migrate to set databse tables:
+   ```
+   npm run migrate:up
+   ```
+
+    4. Start the backend development server:
     ```bash
     npm run dev
     ```
