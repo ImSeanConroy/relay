@@ -1,5 +1,5 @@
 import express from "express"
-import protectRoute from "../middleware/protectRoute.js"
+import protectRoute from "../middleware/protect-route.js"
 import { sendMessage, getMessages, updateMessage, deleteMessage } from "../controllers/message.controller.js"
 
 const router = express.Router()

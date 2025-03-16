@@ -5,6 +5,7 @@ import http from "http";
 import app from "./app.js";
 import { initializeSocket } from "./socket/socket.js";
 import pool from "./config/db.js";
+import { config } from "./constants/app.config.js";
 
 const PORT = process.env.PORT || 3001;
 
@@ -16,7 +17,7 @@ pool
   .then(() => {
     console.log("Connected to PostgreSQL Database using Pool");
     server.listen(PORT, () => {
-      console.log("Server is running on port " + PORT);
+      console.log(`Server is listening on port ${config.PORT} in ${config.NODE_ENV} environment`);
     });
   })
   .catch((err) => console.error("Connection error", err.stack));
