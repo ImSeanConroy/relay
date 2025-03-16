@@ -1,6 +1,18 @@
+import { z } from "zod";
 import { ErrorRequestHandler, Response } from "express";
 import { AppError } from "../utils/app-error.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
+
+const handleZodError = (res: Response, error: z.ZodError) => {
+  const errors = error.issues.map((err) => ({
+    path: err.path.join("."),
+    message: err.message,
+  }));
+  return res.status(HTTPSTATUS.BAD_REQUEST).json({
+    message: "Validation failed",
+    errors: errors,
+  });
+};
 
 const handleAppError = (res: Response, error: AppError) => {
   return res.status(error.statusCode).json({
@@ -17,6 +29,10 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next): any => {
   //     message: "Invalid JSON format, please check your request body",
   //   });
   // }
+
+  if (error instanceof z.ZodError) {
+    return handleZodError(res, error);
+  }
 
   if (error instanceof AppError) {
     return handleAppError(res, error)

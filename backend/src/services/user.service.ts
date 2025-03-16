@@ -1,98 +1,123 @@
+import { ErrorCode } from "../common/error-code.enum.js";
+import {
+  CreateUserParams,
+  LoginUserParams,
+} from "../common/interface/auth.interface.js";
 import User from "../repositories/user.repository.js";
-import { InternalServerException } from "../utils/catch-error.js";
+import { BadRequestException } from "../utils/catch-error.js";
+import generateImage from "../utils/generate-image.js";
+import bcryptjs from "bcryptjs";
 
 /**
- * Fetch all users.
+ * Create a new user.
  */
-const getAll = async () => {
-  try {
-    const users = await User.getUsers();
-    return users;
-  } catch (error) {
-    throw new InternalServerException("Error fetching users");
-  }
-};
-
-/**
- * Fetch a user by ID.
- */
-const findById = async (id: string) => {
-  try {
-    const user = await User.getUserById(id);
-    return user;
-  } catch (error) {
-    throw new InternalServerException("Error fetching user by id");
-  }
-};
-
-/**
- * Fetch a user by email.
- */
-const findByEmail = async (email: string) => {
-  try {
-    const user = await User.getUserByEmail(email);
-    return user;
-  } catch (error) {
-    throw new InternalServerException("Error fetching user by email");
-  }
-};
-
-/**
- * Create a new message.
- */
-const create = async (
-  fullname: string,
-  email: string,
-  password: string,
-  profilePicture: string
-) => {
-  try {
-    const user = await User.createUser(
-      fullname,
-      email,
-      password,
-      profilePicture
+export const createUser = async ({
+  fullname,
+  email,
+  password,
+}: CreateUserParams) => {
+  // Verify Existing User Does Not Exist
+  const existingUser = await User.getUserByEmail(email);
+  if (existingUser) {
+    throw new BadRequestException(
+      "Email already in use",
+      ErrorCode.AUTH_EMAIL_ALREADY_EXISTS
     );
-    return user;
-  } catch (error) {
-    throw new InternalServerException("Error creating user");
   }
+
+  // Create User
+  const salt = await bcryptjs.genSalt(10);
+  const hashedPassword = await bcryptjs.hash(password, salt);
+  const profilePicture = generateImage();
+
+  const user = await User.createUser(
+    fullname,
+    email,
+    hashedPassword,
+    profilePicture
+  );
+
+  // Return User & Token
+  return user;
 };
 
 /**
- * Update a user.
+ * Login a user.
  */
-const update = async (
-  id: string,
-  fullname: string,
-  email: string,
-  profilePicture: string,
-  status: string
-) => {
-  try {
-    const user = await User.updateUser(
-      id,
-      fullname,
-      email,
-      profilePicture,
-      status
+export const loginUser = async ({ email, password }: LoginUserParams) => {
+  // Get User By Email
+  const user = await User.getUserByEmail(email);
+  if (!user) {
+    throw new BadRequestException(
+      "Invalid email or password provided",
+      ErrorCode.AUTH_USER_NOT_FOUND
     );
-    return user;
-  } catch (error) {
-    throw new InternalServerException("Error updating user");
   }
+
+  // Validate Password From The Request
+  const isPasswordValid = await bcryptjs.compare(password, user.password);
+  if (!isPasswordValid) {
+    throw new BadRequestException(
+      "Invalid email or password provided",
+      ErrorCode.AUTH_USER_NOT_FOUND
+    );
+  }
+
+  // Return User & Token
+  return {
+    user,
+  };
 };
 
-/**
- * Hard delete a user by ID.
- */
-const hardDelete = async (id: string) => {
-  try {
-    const user = await User.deleteUser(id);
-    return user;
-  } catch (error) {
-    throw new InternalServerException("Error deleting user");
+// /**
+//  * Update a user.
+//  */
+export const updateUser = async ({
+  id,
+  fullname,
+  email,
+  profilePicture,
+  status,
+}: {
+  id: string;
+  fullname?: string | undefined;
+  email?: string | undefined;
+  profilePicture?: string | undefined;
+  status?: string | undefined;
+}) => {
+  // Verify user exists
+  const user = await User.getUserById(id);
+  if (!user) {
+    throw new BadRequestException(
+      "User not found",
+      ErrorCode.AUTH_USER_NOT_FOUND
+    );
   }
+
+  const newUser = await User.updateUser(
+    id,
+    fullname || user.fullname,
+    email || user.email,
+    profilePicture || user.profilePicture,
+    status || user.status
+  );
+
+  return newUser;
 };
 
-export default { getAll, findById, findByEmail, create, update, hardDelete };
+// /**
+//  * Hard delete a user by ID.
+//  */
+export const hardDeleteUser = async (id: string) => {
+  const user = await User.getUserById(id);
+  if (!user) {
+    throw new BadRequestException(
+      "User not found",
+      ErrorCode.AUTH_USER_NOT_FOUND
+    );
+  }
+
+  await User.deleteUser(id);
+
+  return user;
+};

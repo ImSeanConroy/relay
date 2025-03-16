@@ -1,8 +1,9 @@
 import { Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { config } from "../constants/app.config.js";
 
 const generateToken = (userId: string, res: Response) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET!, {
+  const token = jwt.sign({ userId }, config.JWT.SECRET, {
     expiresIn: "15d",
   });
 
@@ -11,9 +12,9 @@ const generateToken = (userId: string, res: Response) => {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV !== "development",
-  });
+  })
 
-  return token;
+  return token
 };
 
 export default generateToken;

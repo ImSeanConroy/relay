@@ -7,7 +7,7 @@ import { initializeSocket } from "./socket/socket.js";
 import pool from "./config/db.js";
 import { config } from "./constants/app.config.js";
 
-const PORT = process.env.PORT || 3001;
+const PORT = config.PORT;
 
 const server = http.createServer(app);
 const io = initializeSocket(server);
