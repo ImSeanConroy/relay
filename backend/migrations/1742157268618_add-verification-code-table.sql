@@ -7,7 +7,8 @@ CREATE TABLE verification_codes (
   user_id UUID NOT NULL,
   type VARCHAR(50) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  expires_at TIMESTAMP NOT NULL
+  expires_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Down Migration

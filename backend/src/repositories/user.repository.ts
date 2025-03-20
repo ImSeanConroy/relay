@@ -49,16 +49,15 @@ const deleteUser = async (id: string) => {
   return await query("DELETE FROM users WHERE id = $1", [id]);
 };
 
-// =================
-
 const findByIdAndUpdate = async (
   id: string,
   updates: {
     fullname?: string;
     email?: string;
+    password?: string;
     profilePicture?: string;
     status?: string;
-    email_verified: boolean;
+    email_verified?: boolean;
   }
 ) => {
   // Fetch the existing user
@@ -73,6 +72,7 @@ const findByIdAndUpdate = async (
   const updatedUser = {
     fullname: updates.fullname || user.fullname,
     email: updates.email || user.email,
+    password: updates.password || user.password,
     profilePicture: updates.profilePicture || user.profilePicture,
     status: updates.status || user.status,
     emailVerified: updates.email_verified || user.emailVerified,
@@ -80,10 +80,11 @@ const findByIdAndUpdate = async (
 
   // Update the user in the database
   const { rows: updatedRows } = await query(
-    "UPDATE users SET fullname = $1, email = $2, profile_picture = $3, status = $4, email_verified = $5 WHERE id = $6 RETURNING *;",
+    "UPDATE users SET fullname = $1, email = $2, password = $3, profile_picture = $4, status = $5, email_verified = $6 WHERE id = $7 RETURNING *;",
     [
       updatedUser.fullname,
       updatedUser.email,
+      updatedUser.password,
       updatedUser.profilePicture,
       updatedUser.status,
       updatedUser.emailVerified,

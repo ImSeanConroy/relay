@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import generateToken from "../utils/generate-token.js";
-import { createUser, loginUser, verifyEmailService } from "../services/user.service.js";
+import { createUser, loginUser, resetPassword, sendPasswordResetEmail, verifyEmailService } from "../services/user.service.js";
 import { asyncHandler } from "../middleware/async-handler.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
-import { emailSchema, loginSchema, signupSchema, verificationCodeSchema } from "./auth.schemas.js";
+import { emailSchema, loginSchema, resetPasswordSchema, signupSchema, verificationCodeSchema } from "./auth.schemas.js";
 
 /**
  * @description   Signup user
@@ -61,13 +61,12 @@ export const logoutHandler = asyncHandler(
 );
 
 /**
- * @description   Logout user
- * @route         POST /api/auth/logout
+ * @description   Verify user email
+ * @route         POST /api/auth/verify-email
  * @access        Public
  */
 export const verifyEmailHandler = asyncHandler(
   async (req: Request, res: Response): Promise<any> => {
-    console.log(req.params.code)
     const verificationCode = verificationCodeSchema.parse(req.params.code);
 
     await verifyEmailService(verificationCode);
@@ -79,35 +78,35 @@ export const verifyEmailHandler = asyncHandler(
 );
 
 // /**
-//  * @description   Logout user
-//  * @route         POST /api/auth/logout
+//  * @description   Send password reset email
+//  * @route         POST /api/auth/password-forgot
 //  * @access        Public
 //  */
-// export const forgotPasswordHandler = asyncHandler(
-//   async (req: Request, res: Response): Promise<any> => {
-//     const email = emailSchema.parse(req.body.email);
+export const forgotPasswordHandler = asyncHandler(
+  async (req: Request, res: Response): Promise<any> => {
+    const email = emailSchema.parse(req.body.email);
 
-//     await sendPasswordResetEmail(email);
+    await sendPasswordResetEmail(email);
 
-//     return res.status(HTTPSTATUS.OK).json({
-//       message: "Password reset sent successfully",
-//     });
-//   }
-// );
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Password reset sent successfully",
+    });
+  }
+);
 
-// /**
-//  * @description   Logout user
-//  * @route         POST /api/auth/logout
-//  * @access        Public
-//  */
-// export const passwordResetHandler = asyncHandler(
-//   async (req: Request, res: Response): Promise<any> => {
-//     const { password, verificationCode } = resetPasswordSchema.parse(req.body);
+/**
+ * @description   Logout user
+ * @route         POST /api/auth/logout
+ * @access        Public
+ */
+export const passwordResetHandler = asyncHandler(
+  async (req: Request, res: Response): Promise<any> => {
+    const { password, verificationCode } = resetPasswordSchema.parse(req.body);
 
-//     await resetPassword({ password, verificationCode });
+    await resetPassword(password, verificationCode);
 
-//     return res.status(HTTPSTATUS.OK).json({
-//       message: "Password reset successfully",
-//     });
-//   }
-// );
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Password reset successfully",
+    });
+  }
+);

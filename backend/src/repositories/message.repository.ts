@@ -40,7 +40,6 @@ const deleteMessage = async (
 };
 
 const getMessagesForConversation = async (conversationId: string) => {
-  console.log(conversationId)
   const { rows } = await query(
     "SELECT m.id, m.body, m.sent_at, u.fullname FROM messages AS m JOIN users AS u ON m.user_id = u.id WHERE m.conversation_id = $1 ORDER BY m.sent_at",
     [conversationId]

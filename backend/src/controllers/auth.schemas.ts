@@ -21,10 +21,16 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
+  const resetPasswordSchema = z.object({
+    password: passwordSchema,
+    verificationCode: verificationCodeSchema
+  })
+
 export {
   loginSchema,
   signupSchema,
   emailSchema,
   passwordSchema,
   verificationCodeSchema,
+  resetPasswordSchema,
 };

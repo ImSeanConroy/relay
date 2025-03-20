@@ -4,12 +4,18 @@ import { toCamelCase } from "./utils/to-camel-case.js";
 
 // Function to find a verification code by its ID
 const findById = async (id: string) => {
-  const { rows } = await query("SELECT * FROM verification_codes WHERE id = $1;", [id]);
+  const { rows } = await query(
+    "SELECT * FROM verification_codes WHERE id = $1;",
+    [id]
+  );
   return toCamelCase(rows)[0];
 };
 
 const findOne = async (id: string, type: VerificationEnum) => {
-  const { rows } = await query('SELECT * FROM users WHERE id = $1 AND type = $2', [id, type]);
+  const { rows } = await query(
+    "SELECT * FROM verification_codes WHERE id = $1 AND type = $2",
+    [id, type]
+  );
   return toCamelCase(rows)[0];
 };
 
@@ -28,10 +34,7 @@ const create = async (
 
 // Function to delete a verification code by its ID
 const deleteById = async (id: string) => {
-  return await query(
-    "DELETE FROM verification_codes WHERE id = $1",
-    [id]
-  );
+  return await query("DELETE FROM verification_codes WHERE id = $1", [id]);
 };
 
 export default { findById, findOne, create, deleteById };

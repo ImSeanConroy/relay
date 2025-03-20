@@ -10,9 +10,9 @@ import {
   InternalServerException,
 } from "../utils/catch-error.js";
 import generateImage from "../utils/generate-image.js";
-import bcryptjs from "bcryptjs";
 import VerificationCode from "../repositories/verification-code.repository.js";
 import { oneYearFromNow } from "../utils/date.js";
+import { compareValue, hashValue } from "../utils/bcrpyt.js";
 
 /**
  * Create a new user.
@@ -32,8 +32,7 @@ export const createUser = async ({
   }
 
   // Create User
-  const salt = await bcryptjs.genSalt(10);
-  const hashedPassword = await bcryptjs.hash(password, salt);
+  const hashedPassword = await hashValue(password);;
   const profilePicture = generateImage();
 
   const user = await User.createUser(
@@ -72,7 +71,7 @@ export const loginUser = async ({ email, password }: LoginUserParams) => {
   }
 
   // Validate Password From The Request
-  const isPasswordValid = await bcryptjs.compare(password, user.password);
+  const isPasswordValid = await compareValue(password, user.password);
   if (!isPasswordValid) {
     throw new BadRequestException(
       "Invalid email or password provided",
@@ -173,3 +172,68 @@ export const verifyEmailService = async (code: string) => {
   };
 };
 
+export const sendPasswordResetEmail = async (email: string) => {
+  // Get the User by Email
+  const user = await User.getUserByEmail(email);
+  if (!user) {
+    throw new BadRequestException(
+      "User not found",
+      ErrorCode.AUTH_USER_NOT_FOUND
+    );
+  }
+
+  // ADD RATE LIMITING
+
+  // Create Reset Code
+  const expireDate = oneYearFromNow().toISOString();
+  const resetCode = await VerificationCode.create(
+    user.id,
+    VerificationEnum.PASSWORD_RESET,
+    expireDate
+  );
+
+  // Send Reset Email
+  console.log(resetCode.id);
+
+  // Return Success
+  return {
+    email ,
+  };
+};
+
+export const resetPassword = async (
+  password: string,
+  code: string,
+) => {
+  // Get the Reset Code
+  const resetCode = await VerificationCode.findOne(
+    code,
+    VerificationEnum.PASSWORD_RESET
+  );
+  if (!resetCode) {
+    throw new BadRequestException("Invalid or expired verification token");
+  }
+
+  if (new Date() > new Date(resetCode.expiresAt)) {
+    throw new BadRequestException("Invalid or expired verification token");
+  }
+
+  // Update the User
+  const hashedPassword = await hashValue(password);
+  const updatedUser = await User.findByIdAndUpdate(resetCode.userId, {
+    password: hashedPassword,
+  });
+  if (!updatedUser) {
+    throw new InternalServerException(
+      "Failed to verify email",
+      ErrorCode.VALIDATION_ERROR
+    );
+  }
+
+  // Delete the Verification Code
+  await VerificationCode.deleteById(resetCode.id);
+
+  return {
+    user: updateUser,
+  };
+};
