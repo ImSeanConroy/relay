@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { NotFoundException } from "../utils/catch-error.js";
-import { ErrorCode } from "../common/error-code.enum.js";
+import { ErrorCode } from "../common/enums/error-code.enum.js";
 import { asyncHandler } from "../middleware/async-handler.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
 import User from "../repositories/user.repository.js";

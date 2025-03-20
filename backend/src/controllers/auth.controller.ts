@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import generateToken from "../utils/generate-token.js";
-import { createUser, loginUser } from "../services/user.service.js";
+import { createUser, loginUser, verifyEmailService } from "../services/user.service.js";
 import { asyncHandler } from "../middleware/async-handler.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
-import { loginSchema, signupSchema } from "./auth.schemas.js";
+import { emailSchema, loginSchema, signupSchema, verificationCodeSchema } from "./auth.schemas.js";
 
 /**
  * @description   Signup user
@@ -40,7 +40,7 @@ export const loginHandler = asyncHandler(
     const user = await loginUser(request);
 
     // Return Response
-    generateToken(user.user.id, res)
+    generateToken(user.user.id, res);
     return res.status(HTTPSTATUS.CREATED).json({
       message: "User login successfully",
       data: user,
@@ -59,3 +59,55 @@ export const logoutHandler = asyncHandler(
     res.status(200).json({ message: "logged out successfully" });
   }
 );
+
+/**
+ * @description   Logout user
+ * @route         POST /api/auth/logout
+ * @access        Public
+ */
+export const verifyEmailHandler = asyncHandler(
+  async (req: Request, res: Response): Promise<any> => {
+    console.log(req.params.code)
+    const verificationCode = verificationCodeSchema.parse(req.params.code);
+
+    await verifyEmailService(verificationCode);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Email verified successfully",
+    });
+  }
+);
+
+// /**
+//  * @description   Logout user
+//  * @route         POST /api/auth/logout
+//  * @access        Public
+//  */
+// export const forgotPasswordHandler = asyncHandler(
+//   async (req: Request, res: Response): Promise<any> => {
+//     const email = emailSchema.parse(req.body.email);
+
+//     await sendPasswordResetEmail(email);
+
+//     return res.status(HTTPSTATUS.OK).json({
+//       message: "Password reset sent successfully",
+//     });
+//   }
+// );
+
+// /**
+//  * @description   Logout user
+//  * @route         POST /api/auth/logout
+//  * @access        Public
+//  */
+// export const passwordResetHandler = asyncHandler(
+//   async (req: Request, res: Response): Promise<any> => {
+//     const { password, verificationCode } = resetPasswordSchema.parse(req.body);
+
+//     await resetPassword({ password, verificationCode });
+
+//     return res.status(HTTPSTATUS.OK).json({
+//       message: "Password reset successfully",
+//     });
+//   }
+// );

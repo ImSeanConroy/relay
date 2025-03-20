@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const emailSchema = z.string().trim().email().min(1).max(255);
 const passwordSchema = z.string().trim().min(6).max(255);
+const verificationCodeSchema = z.string().trim().min(1)
 
 const loginSchema = z.object({
   email: emailSchema,
@@ -25,4 +26,5 @@ export {
   signupSchema,
   emailSchema,
   passwordSchema,
+  verificationCodeSchema,
 };

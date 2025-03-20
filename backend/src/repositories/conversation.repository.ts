@@ -1,5 +1,5 @@
 import { query } from "../config/db.js";
-import { toCamelCase } from "./utils/toCamelCase.js";
+import { toCamelCase } from "./utils/to-camel-case.js";
 
 const getConversationById = async (conversationId: string) => {
   const { rows } = await query(

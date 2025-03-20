@@ -1,4 +1,4 @@
-import { ErrorCode } from "../common/error-code.enum.js";
+import { ErrorCode } from "../common/enums/error-code.enum.js";
 import { HTTPSTATUS, HttpStatusCode } from "../constants/http.config.js";
 import { AppError } from "./app-error.js";
 

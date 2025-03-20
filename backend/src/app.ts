@@ -31,7 +31,7 @@ app.get("/api/health", async (req: Request, res: Response) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", protectRoute ,userRoutes);
-app.use("/api/conversations", conversationRoutes);
+app.use("/api/conversations", protectRoute, conversationRoutes);
 app.use("/api/messages", messageRoutes);
 
 app.use(errorHandler);

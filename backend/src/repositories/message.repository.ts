@@ -1,5 +1,5 @@
 import { query } from "../config/db.js";
-import { toCamelCase } from "./utils/toCamelCase.js";
+import { toCamelCase } from "./utils/to-camel-case.js";
 
 const getMessageById = async (id: string) => {
   const { rows } = await query("SELECT * FROM message WHERE id = $1;", [id]);

@@ -1,12 +1,18 @@
-import { ErrorCode } from "../common/error-code.enum.js";
+import { ErrorCode } from "../common/enums/error-code.enum.js";
 import {
   CreateUserParams,
   LoginUserParams,
 } from "../common/interface/auth.interface.js";
+import { VerificationEnum } from "../common/enums/verification-code.enum.js";
 import User from "../repositories/user.repository.js";
-import { BadRequestException } from "../utils/catch-error.js";
+import {
+  BadRequestException,
+  InternalServerException,
+} from "../utils/catch-error.js";
 import generateImage from "../utils/generate-image.js";
 import bcryptjs from "bcryptjs";
+import VerificationCode from "../repositories/verification-code.repository.js";
+import { oneYearFromNow } from "../utils/date.js";
 
 /**
  * Create a new user.
@@ -36,6 +42,17 @@ export const createUser = async ({
     hashedPassword,
     profilePicture
   );
+
+  // Create Email Verification Code
+  const expireDate = oneYearFromNow().toISOString();
+  const verificationCode = await VerificationCode.create(
+    user.id,
+    VerificationEnum.EMAIL_VERIFICATION,
+    expireDate
+  );
+
+  // Send Verification Email
+  console.log(verificationCode.id);
 
   // Return User & Token
   return user;
@@ -121,3 +138,38 @@ export const hardDeleteUser = async (id: string) => {
 
   return user;
 };
+
+export const verifyEmailService = async (code: string) => {
+  // Get the Verification Code
+  const verificationCode = await VerificationCode.findOne(
+    code,
+    VerificationEnum.EMAIL_VERIFICATION
+  );
+  if (!verificationCode) {
+    throw new BadRequestException("Invalid or expired verification token");
+  }
+
+  if (new Date() > new Date(verificationCode.expiresAt)) {
+    throw new BadRequestException("Invalid or expired verification token");
+  }
+
+  // Update the User
+  const updatedUser = await User.findByIdAndUpdate(verificationCode.userId, {
+    email_verified: true,
+  });
+  if (!updatedUser) {
+    throw new InternalServerException(
+      "Failed to verify email",
+      ErrorCode.VALIDATION_ERROR
+    );
+  }
+
+  // Delete the Verification Code
+  await VerificationCode.deleteById(verificationCode.id);
+
+  // Return the User
+  return {
+    user: updatedUser,
+  };
+};
+

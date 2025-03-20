@@ -16,6 +16,10 @@ const appConfig = () => ({
   JWT: {
     SECRET: getEnvVariable("JWT_SECRET", "secret_token"),
   },
+  RESEND: {
+    API_KEY: getEnvVariable("RESEND_API_KEY"),
+    SENDER_MAILER: getEnvVariable("RESEND_SENDER_MAILER"),
+  }
 });
 
 export const config = appConfig();
