@@ -5,7 +5,7 @@ import { asyncHandler } from "../middleware/async-handler.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
 import User from "../repositories/user.repository.js";
 import { hardDeleteUser, updateUser } from "../services/user.service.js";
-import { userSchema } from "./user.schemas.js";
+import { userSchema } from "../common/schemas/user.schemas.js";
 
 /**
  * @description   Get user profile

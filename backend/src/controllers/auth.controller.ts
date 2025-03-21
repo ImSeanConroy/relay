@@ -15,7 +15,7 @@ import {
   resetPasswordSchema,
   signupSchema,
   verificationCodeSchema,
-} from "./auth.schemas.js";
+} from "../common/schemas/auth.schemas.js";
 
 /**
  * @description   Signup user and send email verification

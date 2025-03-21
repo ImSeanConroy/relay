@@ -10,6 +10,9 @@ import VerificationCode from "../repositories/verification-code.repository.js";
 import { oneHourFromNow, oneYearFromNow } from "../utils/date.js";
 import { compareValue, hashValue } from "../utils/bcrpyt.js";
 import { sanitizedUser } from "../utils/sanitized-user.js";
+import { sendMail } from "../utils/send-email.js";
+import { config } from "../constants/app.config.js";
+import { getPasswordResetTemplate, getVerifyEmailTemplate } from "../utils/email-Templates.js";
 
 /**
  * Creates a new user and sends an email verification code.
@@ -62,7 +65,15 @@ export const createUser = async (
   );
 
   // Send Verification Email
-  console.log(verificationCode.id);
+  const verificationUrl = `${config.ORIGIN}${config.BASE_PATH}/auth/verify-email/${verificationCode.id}`;
+  const { error } = await sendMail({
+    to: email,
+    ...getVerifyEmailTemplate(verificationUrl),
+  });
+  // TODO - EMAIL ERROR HANDLING
+  if (error) {
+  console.log(error);
+  }
 
   // Return User & Token
   return sanitizedUser(user);
@@ -265,7 +276,7 @@ export const sendPasswordResetEmail = async (email: string) => {
     );
   }
 
-  // ADD RATE LIMITING
+  // TODO - ADD RATE LIMITING
 
   // Create Reset Code
   const expireDate = oneHourFromNow().toISOString();
@@ -276,7 +287,15 @@ export const sendPasswordResetEmail = async (email: string) => {
   );
 
   // Send Reset Email
-  console.log(resetCode.id);
+  const resetLink = `${config.ORIGIN}${config.BASE_PATH}/auth/verify-email/${resetCode.id}&exp=${expireDate}`;
+  const { error } = await sendMail({
+    to: email,
+    ...getPasswordResetTemplate(resetLink),
+  });
+  // TODO - EMAIL ERROR HANDLING
+  if (error) {
+    console.log(error);
+  }
 
   // Return Success
   return {
