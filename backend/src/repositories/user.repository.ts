@@ -5,7 +5,7 @@ import { toCamelCase } from "./utils/to-camel-case.js";
 /**
  * Retrieves all users from the database.
  *
- * This function executes a SQL query to fetch all user records and 
+ * This function executes a SQL query to fetch all user records and
  * converts the result to camelCase format.
  *
  * @returns A list of users.
@@ -36,7 +36,7 @@ const getById = async (id: string): Promise<User | null> => {
  */
 const getByEmail = async (email: string): Promise<User | null> => {
   const { rows } = await query(
-    `SELECT * FROM users WHERE email = $1 LIMIT 1 RETURNING *;;`,
+    `SELECT * FROM users WHERE email = $1 LIMIT 1;`,
     [email]
   );
   return toCamelCase(rows)[0] || null;
@@ -59,7 +59,7 @@ const create = async (
 ): Promise<User> => {
   const { rows } = await query(
     `INSERT INTO users (fullname, email, password, profile_picture)
-     VALUES ($1, $2, $3, $4) RETURNING *;`,
+    VALUES ($1, $2, $3, $4) RETURNING *;`,
     [fullname, email, password, profilePicture]
   );
   return toCamelCase(rows)[0];

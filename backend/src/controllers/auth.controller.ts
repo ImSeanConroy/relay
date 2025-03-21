@@ -28,7 +28,7 @@ export const signupHandler = asyncHandler(
     const request = signupSchema.parse(req.body);
 
     // Call Service
-    const user = await createUser(
+    await createUser(
       request.fullname,
       request.email,
       request.password

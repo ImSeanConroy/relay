@@ -7,5 +7,4 @@ export const userSchema = z.object({
   email: emailSchema.optional(),
   profilePicture: z.string().trim().max(255).optional(),
   status: z.string().trim().max(255).optional(),
-  email_verified: z.boolean().default(false).optional()
 });

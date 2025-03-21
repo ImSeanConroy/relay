@@ -9,6 +9,7 @@ import generateImage from "../utils/generate-image.js";
 import VerificationCode from "../repositories/verification-code.repository.js";
 import { oneHourFromNow, oneYearFromNow } from "../utils/date.js";
 import { compareValue, hashValue } from "../utils/bcrpyt.js";
+import { sanitizedUser } from "../utils/sanitized-user.js";
 
 /**
  * Creates a new user and sends an email verification code.
@@ -64,7 +65,7 @@ export const createUser = async (
   console.log(verificationCode.id);
 
   // Return User & Token
-  return user;
+  return sanitizedUser(user);
 };
 
 /**
@@ -90,7 +91,6 @@ export const loginUser = async (email: string, password: string) => {
       ErrorCode.AUTH_USER_NOT_FOUND
     );
   }
-  console.log(user)
 
   // Validate Password From The Request
   const isPasswordValid = await compareValue(password, user.password);
@@ -102,7 +102,7 @@ export const loginUser = async (email: string, password: string) => {
   }
 
   // Return User & Token
-  return user;
+  return sanitizedUser(user);
 };
 
 /**
@@ -152,7 +152,7 @@ export const updateUser = async (
     user.emailVerified
   );
 
-  return updatedUser;
+  return sanitizedUser(updatedUser);
 };
 
 /**
@@ -178,7 +178,7 @@ export const hardDeleteUser = async (id: string) => {
   }
 
   await User.deleteById(id);
-  return user;
+  return sanitizedUser(user);
 };
 
 /**
@@ -239,9 +239,7 @@ export const verifyEmailService = async (code: string) => {
   await VerificationCode.deleteById(verificationCode.id);
 
   // Return the User
-  return {
-    user: updatedUser,
-  };
+  return sanitizedUser(updatedUser);
 };
 
 /**
@@ -345,6 +343,6 @@ export const resetPassword = async (password: string, code: string) => {
   await VerificationCode.deleteById(resetCode.id);
 
   return {
-    user: updatedUser,
+    user: sanitizedUser(updateUser),
   };
 };
