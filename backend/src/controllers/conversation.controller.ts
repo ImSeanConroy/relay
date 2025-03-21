@@ -35,7 +35,6 @@ export const createConversationHandler = asyncHandler(
 // export const getUserConversations = asyncHandler(
 //   async (req: Request, res: Response) => {
 //     const userId = req.user.id;
-//     console.log(userId)
 //     const conversations = await conversationService.findByUser(userId);
 //     res.json(conversations);
 //   }

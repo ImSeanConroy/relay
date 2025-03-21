@@ -14,7 +14,7 @@ import { userSchema } from "./user.schemas.js";
  */
 export const getUserHandler = asyncHandler(
   async (req: Request, res: Response) => {
-    const user = await User.getUserById(req.user.id);
+    const user = await User.getById(req.user.id);
     if (!user) {
       throw new NotFoundException("User not found", ErrorCode.AUTH_NOT_FOUND);
     }
@@ -38,7 +38,7 @@ export const updateUserHandler = asyncHandler(
     const userId = req.user.id;
 
     // Call Service
-    const user = await updateUser({ id: userId, ...request });
+    const user = await updateUser(userId, request);
 
     // Return Response
     return res.status(HTTPSTATUS.CREATED).json({

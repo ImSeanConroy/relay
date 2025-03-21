@@ -1,15 +1,23 @@
 import { z } from "zod";
 
-const emailSchema = z.string().trim().email().min(1).max(255);
-const passwordSchema = z.string().trim().min(6).max(255);
-const verificationCodeSchema = z.string().trim().min(1)
+// Schema for validating email
+export const emailSchema = z.string().trim().email().min(1).max(255);
 
-const loginSchema = z.object({
+// Schema for validating password
+export const passwordSchema = z.string().trim().min(6).max(255);
+
+// Schema for validating a verification code
+export const verificationCodeSchema = z.string().trim().min(1);
+
+// Schema for validating login form
+export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
-const signupSchema = z
+// Schema for validating user signup form
+// Also ensures that the password matches the confirmPassword field
+export const signupSchema = z
   .object({
     fullname: z.string().trim().min(1).max(255),
     email: emailSchema,
@@ -21,16 +29,8 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
-  const resetPasswordSchema = z.object({
-    password: passwordSchema,
-    verificationCode: verificationCodeSchema
-  })
-
-export {
-  loginSchema,
-  signupSchema,
-  emailSchema,
-  passwordSchema,
-  verificationCodeSchema,
-  resetPasswordSchema,
-};
+// Schema for validating the password reset form
+export const resetPasswordSchema = z.object({
+  password: passwordSchema,
+  verificationCode: verificationCodeSchema,
+});

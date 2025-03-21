@@ -1,106 +1,115 @@
+import { User } from "../common/interface/user.interface.js";
 import { query } from "../config/db.js";
 import { toCamelCase } from "./utils/to-camel-case.js";
 
-const getUsers = async () => {
+/**
+ * Retrieves all users from the database.
+ *
+ * This function executes a SQL query to fetch all user records and 
+ * converts the result to camelCase format.
+ *
+ * @returns A list of users.
+ */
+const getAll = async (): Promise<User[]> => {
   const { rows } = await query("SELECT * FROM users;");
   return toCamelCase(rows);
 };
 
-const getUserById = async (id: string) => {
-  const { rows } = await query("SELECT * FROM users WHERE id = $1;", [id]);
-  return toCamelCase(rows)[0];
-};
-
-const getUserByEmail = async (email: string) => {
-  const { rows } = await query("SELECT * FROM users WHERE email = $1;", [
-    email,
+/**
+ * Retrieves a user by their unique ID.
+ *
+ * @param id - The unique identifier of the user.
+ * @returns The user object if found, otherwise null.
+ */
+const getById = async (id: string): Promise<User | null> => {
+  const { rows } = await query(`SELECT * FROM users WHERE id = $1 LIMIT 1;`, [
+    id,
   ]);
-  return toCamelCase(rows)[0];
+  return toCamelCase(rows)[0] || null;
 };
 
-const createUser = async (
+/**
+ * Retrieves a user by their email address.
+ *
+ * @param email - The email address of the user.
+ * @returns The user object if found, otherwise null.
+ */
+const getByEmail = async (email: string): Promise<User | null> => {
+  const { rows } = await query(
+    `SELECT * FROM users WHERE email = $1 LIMIT 1 RETURNING *;;`,
+    [email]
+  );
+  return toCamelCase(rows)[0] || null;
+};
+
+/**
+ * Creates a new user in the database.
+ *
+ * @param fullname - The full name of the user.
+ * @param email - The email address of the user.
+ * @param password - The hashed password of the user.
+ * @param profilePicture - The URL of the user's profile picture.
+ * @returns The newly created user object.
+ */
+const create = async (
   fullname: string,
   email: string,
   password: string,
   profilePicture: string
-) => {
+): Promise<User> => {
   const { rows } = await query(
-    "INSERT INTO users (fullname, email, password, profile_picture) VALUES ($1, $2, $3, $4) RETURNING *;",
+    `INSERT INTO users (fullname, email, password, profile_picture)
+     VALUES ($1, $2, $3, $4) RETURNING *;`,
     [fullname, email, password, profilePicture]
   );
   return toCamelCase(rows)[0];
 };
 
-const updateUser = async (
+/**
+ * Updates an existing user in the database.
+ *
+ * @param id - The unique identifier of the user.
+ * @param fullname - The full name of the user.
+ * @param email - The email address of the user.
+ * @param password - The hashed password of the user.
+ * @param profilePicture - The URL of the user's profile picture.
+ * @param status - The status of the user account.
+ * @param emailVerified - Indicates whether the email is verified.
+ * @returns The updated user object, or null if not found.
+ */
+const update = async (
   id: string,
   fullname: string,
   email: string,
+  password: string,
   profilePicture: string,
-  status: string
-) => {
+  status: string,
+  emailVerified: boolean
+): Promise<User | null> => {
   const { rows } = await query(
-    "UPDATE users SET fullname = $1, email = $2, profile_picture = $3, status = $4 WHERE id = $5 RETURNING *;",
-    [fullname, email, profilePicture, status, id]
+    `UPDATE users 
+     SET fullname = $1, email = $2, password = $3, profile_picture = $4, status = $5, email_verified = $6 
+     WHERE id = $7 RETURNING *;`,
+    [fullname, email, password, profilePicture, status, emailVerified, id]
   );
-  return toCamelCase(rows)[0];
+  return toCamelCase(rows)[0] || null;
 };
 
-const deleteUser = async (id: string) => {
-  return await query("DELETE FROM users WHERE id = $1", [id]);
-};
-
-const findByIdAndUpdate = async (
-  id: string,
-  updates: {
-    fullname?: string;
-    email?: string;
-    password?: string;
-    profilePicture?: string;
-    status?: string;
-    email_verified?: boolean;
-  }
-) => {
-  // Fetch the existing user
-  const { rows } = await query("SELECT * FROM users WHERE id = $1;", [id]);
-  const user = toCamelCase(rows)[0];
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  // Merge updates with existing user data
-  const updatedUser = {
-    fullname: updates.fullname || user.fullname,
-    email: updates.email || user.email,
-    password: updates.password || user.password,
-    profilePicture: updates.profilePicture || user.profilePicture,
-    status: updates.status || user.status,
-    emailVerified: updates.email_verified || user.emailVerified,
-  };
-
-  // Update the user in the database
-  const { rows: updatedRows } = await query(
-    "UPDATE users SET fullname = $1, email = $2, password = $3, profile_picture = $4, status = $5, email_verified = $6 WHERE id = $7 RETURNING *;",
-    [
-      updatedUser.fullname,
-      updatedUser.email,
-      updatedUser.password,
-      updatedUser.profilePicture,
-      updatedUser.status,
-      updatedUser.emailVerified,
-      id,
-    ]
-  );
-
-  return toCamelCase(updatedRows)[0];
+/**
+ * Deletes a user from the database by their ID.
+ *
+ * @param id - The unique identifier of the user to delete.
+ * @returns Resolves when the user is deleted.
+ */
+const deleteById = async (id: string): Promise<void> => {
+  await query("DELETE FROM users WHERE id = $1", [id]);
 };
 
 export default {
-  getUsers,
-  getUserById,
-  getUserByEmail,
-  createUser,
-  updateUser,
-  deleteUser,
-  findByIdAndUpdate,
+  getAll,
+  getById,
+  getByEmail,
+  create,
+  update,
+  deleteById,
 };

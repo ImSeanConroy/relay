@@ -1,14 +1,11 @@
 import { z } from "zod";
+import { emailSchema } from "./auth.schemas.js";
 
-const userSchema = z
-  .object({
-    fullname: z.string().trim().max(255).optional(),
-    email: z.string().trim().email().max(255).optional(),
-    profilePicture: z.string().trim().max(255).optional(),
-    status: z.string().trim().max(255).optional(),
-    email_verified: z.boolean().default(false).optional(),
-  })
-
-export {
-  userSchema
-};
+// Schema for validating user data object
+export const userSchema = z.object({
+  fullname: z.string().trim().max(255).optional(),
+  email: emailSchema.optional(),
+  profilePicture: z.string().trim().max(255).optional(),
+  status: z.string().trim().max(255).optional(),
+  email_verified: z.boolean().default(false).optional()
+});

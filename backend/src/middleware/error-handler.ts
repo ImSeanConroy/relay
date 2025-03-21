@@ -1,8 +1,15 @@
 import { z } from "zod";
-import { ErrorRequestHandler, Response } from "express";
+import { ErrorRequestHandler, Response, Request, NextFunction } from "express";
 import { AppError } from "../utils/app-error.js";
 import { HTTPSTATUS } from "../constants/http.config.js";
 
+/**
+ * Handles Zod validation errors and formats the response.
+ *
+ * @param res - The Express response object to send the error response.
+ * @param error - The Zod error object containing validation issues.
+ * @returns A JSON response with detailed validation errors.
+ */
 const handleZodError = (res: Response, error: z.ZodError) => {
   const errors = error.issues.map((err) => ({
     path: err.path.join("."),
@@ -14,14 +21,36 @@ const handleZodError = (res: Response, error: z.ZodError) => {
   });
 };
 
+/**
+ * Handles custom application errors (AppError) and formats the response.
+ *
+ * @param res - The Express response object to send the error response.
+ * @param error - The AppError object containing error details.
+ * @returns A JSON response with the error message and code.
+ */
 const handleAppError = (res: Response, error: AppError) => {
   return res.status(error.statusCode).json({
     message: error.message,
     errorCode: error.errorCode,
   });
-}
+};
 
-const errorHandler: ErrorRequestHandler = (error, req, res, next): any => {
+/**
+ * General error handler middleware for Express.
+ * Catches all errors thrown by routes or middleware and formats them based on the error type.
+ *
+ * @param error - The error object, which can be of various types.
+ * @param req - The Express request object.
+ * @param res - The Express response object to send the error response.
+ * @param next - The next middleware function.
+ * @returns A JSON response with the error message.
+ */
+const errorHandler: ErrorRequestHandler = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
   console.log(`PATH: ${req.path}`, error);
 
   // if (error instanceof SyntaxError) {
@@ -35,7 +64,7 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next): any => {
   }
 
   if (error instanceof AppError) {
-    return handleAppError(res, error)
+    return handleAppError(res, error);
   }
 
   return res.status(HTTPSTATUS.INTERNAL_SERVER_ERROR).json({
