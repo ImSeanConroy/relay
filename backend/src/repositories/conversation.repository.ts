@@ -1,70 +1,88 @@
+import { Conversation } from "../common/interface/conversation.interface.js";
 import { query } from "../config/db.js";
 import { toCamelCase } from "./utils/to-camel-case.js";
 
-const getConversationById = async (conversationId: string) => {
+/**
+ * Retrieves all converations from the database.
+ *
+ * This function executes a SQL query to fetch all conversations belonging to a user and
+ * converts the result to camelCase format.
+ *
+ * @param userId - The unique identifier of the user.
+ * @returns A list of conversations.
+ */
+const getByUserId = async (userId: string) => {
   const { rows } = await query(
-    "SELECT * FROM conversations WHERE conversation_id = $1",
-    [conversationId]
-  );
-  return toCamelCase(rows)[0];
-};
-
-const getConversationParticipants = async (conversationId: string) => {
-  const { rows } = await query(
-    "SELECT user_id, joined_at FROM conversation_participants WHERE conversation_id = $1",
-    [conversationId]
-  );
-  return toCamelCase(rows)[0];
-};
-
-const getUserConversations = async (userId: string) => {
-  const { rows } = await query(
-    "SELECT c.id, c.type, c.name FROM conversations c JOIN conversation_participants cp ON c.id = cp.conversation_id WHERE cp.user_id = $1",
+    "SELECT c.id, c.type, c.name, c.updated_at, c.created_at FROM conversations c JOIN conversation_participants cp ON c.id = cp.conversation_id WHERE cp.user_id = $1",
     [userId]
   );
-  return toCamelCase(rows);
+  return toCamelCase(rows) || null;
 };
 
-const createConversation = async (
-  conversationType: string,
-  name: string | null = null
+/**
+ * Retrieves a converation by its unique ID.
+ *
+ * @param id - The unique identifier of the converation.
+ * @returns The converation object if found, otherwise null.
+ */
+const getById = async (id: string): Promise<Conversation | null> => {
+  const { rows } = await query(`SELECT * FROM conversations WHERE id = $1 LIMIT 1;`, [
+    id,
+  ]);
+  return toCamelCase(rows)[0] || null;
+};
+
+/**
+ * Retrieves new converation in the database.
+ *
+ * @param name - The name of the converation.
+ * @param email - The type of the converation.
+ * @returns A list of conversations.
+ */
+const create = async (
+  name: string | null = null,
+  type: string
 ) => {
   const { rows } = await query(
     "INSERT INTO conversations (type, name) VALUES ($1, $2) RETURNING *;",
-    [conversationType, name]
+    [type, name]
   );
   return toCamelCase(rows)[0];
 };
 
-const addParticipant = async (conversationId: string, userId: string) => {
+/**
+ * Updates an existing conversation in the database.
+ *
+ * @param id - The unique identifier of the conversation.
+ * @param name - The name of the conversation.
+ * @returns The updated conversation object, or null if not found.
+ */
+const update = async (
+  id: string,
+  name: string
+): Promise<Conversation | null> => {
   const { rows } = await query(
-    "INSERT INTO conversation_participants (conversation_id, user_id) VALUES ($1, $2)",
-    [conversationId, userId]
+    `UPDATE conversations 
+     SET name = $1 WHERE id = $2 RETURNING *;`,
+    [name, id]
   );
-  return toCamelCase(rows)[0];
+  return toCamelCase(rows)[0] || null;
 };
 
-const removeParticipant = async (conversationId: string, userId: string) => {
-  const { rows } = await query(
-    "DELETE FROM conversation_participants WHERE conversation_id = $1 AND user_id = $2",
-    [conversationId, userId]
-  );
-  return toCamelCase(rows)[0];
-};
-
-const deleteConversation = async (conversationId: string) => {
-  const { rows } = await query("DELETE FROM conversations WHERE id = $1", [
-    conversationId,
-  ]);
-  return toCamelCase(rows)[0];
+/**
+ * Deletes a conversation from the database by its ID.
+ *
+ * @param id - The unique identifier of the conversation to delete.
+ * @returns Resolves when the conversation is deleted.
+ */
+const deleteById = async (id: string): Promise<void> => {
+  await query("DELETE FROM conversations WHERE id = $1", [id]);
 };
 
 export default {
-  getConversationById,
-  getConversationParticipants,
-  getUserConversations,
-  createConversation,
-  addParticipant,
-  removeParticipant,
-  deleteConversation,
+  getByUserId,
+  getById,
+  create,
+  update,
+  deleteById
 };
