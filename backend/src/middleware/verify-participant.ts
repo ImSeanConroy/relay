@@ -16,9 +16,10 @@ import { asyncHandler } from "./async-handler.js";
  */
 const verifyParticipant = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const conversationId = req.params.conversationId || req.body.conversationId
     const result = await query(
       "SELECT * FROM conversation_participants WHERE conversation_id = $1 AND user_id = $2",
-      [req.params.conversationId, req.user.id]
+      [conversationId, req.user.id]
     );
 
     if (result.rows.length === 0) {

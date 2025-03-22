@@ -2,14 +2,13 @@ import { query } from "../config/db.js";
 import { toCamelCase } from "./utils/to-camel-case.js";
 
 /**
- * Retrieves all user converations from the database.
+ * Creates a new participant in the database.
  *
- * This function executes a SQL query to fetch all conversations belonging to a user and
- * converts the result to camelCase format.
+ * This function executes a SQL query to create a new participant mapping a user and
+ * a conversation
  *
  * @param conversationId - The unique identifier of the converation.
- * @param userId - The unique identifier of the user.
- * @returns A list of conversations.
+ * @param userIds - The unique identifiers of the users.
  */
 const add = async (conversationId: string, userId: string) => {
   const { rows } = await query(
@@ -20,13 +19,13 @@ const add = async (conversationId: string, userId: string) => {
 };
 
 /**
- * Retrieves all user converations from the database.
+ * Remove a participant from the database.
  *
- * This function executes a SQL query to fetch all conversations belonging to a user and
- * converts the result to camelCase format.
+ * This function executes a SQL query to delete a participant mapping a user and
+ * a conversation
  *
- * @param userId - The unique identifier of the user.
- * @returns A list of conversations.
+ * @param conversationId - The unique identifier of the converation.
+ * @param userIds - The unique identifiers of the users.
  */
 const remove = async (conversationId: string, userId: string) => {
   const { rows } = await query(

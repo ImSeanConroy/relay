@@ -1,5 +1,5 @@
 import Conversation from "../repositories/conversation.repository.js";
-import ConversationPartcipants from "../repositories/conversation-participants.js";
+import Participants from "../repositories/participants.repository.js";
 import { BadRequestException } from "../utils/catch-error.js";
 import { ErrorCode } from "../common/enums/error-code.enum.js";
 
@@ -30,7 +30,7 @@ export const createConversation = async ({
 }) => {
   const newConversation = await Conversation.create(name, type);
 
-  await ConversationPartcipants.add(newConversation.id, requesterId);
+  await Participants.add(newConversation.id, requesterId);
 
   return newConversation;
 };
